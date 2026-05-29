@@ -7,10 +7,10 @@ export default function ChatInput({
   userColor
 }: any) {
   return (
-    <div className='relative bottom-0 w-full p-5 bg-linear-to-t from-black to-transparent'>
+    <div className='relative bottom-0 w-full p-5 '>
       <div className='max-w-3xl mx-auto'>
         
-        <div className='bg-white/5 border border-white/10 backdrop-blur-2xl rounded-3xl p-4 shadow-xl focus-within:ring-2 focus-within:ring-blue-500/40'>
+        <div className='bg-white/5 border dark:border-white/10 border-black/20 backdrop-blur-2xl rounded-3xl p-4 shadow-xl focus-within:ring-2 focus-within:ring-blue-500/40'>
 
           <textarea
             value={input}
@@ -18,7 +18,7 @@ export default function ChatInput({
             onKeyDown={handleKeyDown}
             rows={2}
             placeholder='Message AI assistant...'
-            className='w-full bg-transparent outline-none text-white resize-none text-[15px]'
+            className='w-full bg-transparent outline-none  resize-none text-[15px]'
           />
 
           <div className='flex justify-between items-center mt-3'>

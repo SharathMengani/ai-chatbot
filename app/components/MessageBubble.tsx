@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { FaUserCircle } from 'react-icons/fa'
+import { LuBotMessageSquare } from 'react-icons/lu'
 
 type Message = {
     role: 'user' | 'assistant'
@@ -22,21 +24,25 @@ export default function MessageBubble({
 
     return (
         <div
-            className={`flex ${msg.role === 'user'
-                ? 'justify-end'
+            className={`flex items-center gap-3 ${msg.role === 'user'
+                ? 'justify-start flex-row-reverse'
                 : 'justify-start'
                 }`}
         >
+            {msg.role !== 'user' ?
+                <LuBotMessageSquare /> :
+                <FaUserCircle />
+            }
             <div className='relative max-w-[85%]'>
 
                 <div
                     className={`
             rounded-2xl px-5 py-4 text-[15px]
-           wrap-break-word text-white
+           wrap-break-word 
             transition-all
             ${msg.role === 'user'
                             ? userColor
-                            : 'bg-white/5 border border-white/10'
+                            : 'dark:bg-white/5 bg-black/10 border border-white/10'
                         }
           `}
                 >

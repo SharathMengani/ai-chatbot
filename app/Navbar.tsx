@@ -5,8 +5,10 @@ import {
     signOut,
     useSession,
 } from 'next-auth/react'
-import { userColorClasses } from './utils'
-import { useState } from 'react'
+import ThemeToggle from './components/ThemeToggle'
+import { ColorDropdown } from './components/ColorDropdown'
+import { Logo } from './utils'
+import { useTheme } from 'next-themes'
 
 type NavbarProps = {
     userColor: string
@@ -19,18 +21,18 @@ export default function Navbar({
 }: NavbarProps) {
     const { data: session } = useSession()
 
-
+    const { theme } = useTheme();
+    const isDark = theme === "dark";
     return (
-        <header className='px-6 py-4 border-b sticky top-0 border-[#222] bg-black/80 backdrop-blur-xl text-[20px] font-semibold z-10 flex justify-between items-center'>
+        <header className='px-6 py-4 border-b sticky top-0 dark:border-white/10 border-black/10  backdrop-blur-xl text-[20px] font-semibold z-10 flex justify-between items-center'>
 
             {/* LOGO */}
-            <h1 className='text-white'>\
-                AI Assistant</h1>
+            <Logo className='w-50' textColor={isDark ? '#fff' : '#000'} titleColor={isDark ? '#dadfe3' : '#b5b5b5'} />
 
             {/* RIGHT SIDE */}
             <div className='flex items-center gap-4'>
 
-                {/* 🎨 THEME SWITCHER */}
+                <ThemeToggle />
                 <ColorDropdown setUserColor={setUserColor} userColor={userColor} />
 
                 {/* AUTH */}
@@ -42,19 +44,19 @@ export default function Navbar({
                             <img
                                 src={session.user.image}
                                 alt='User'
-                                className='w-9 h-9 rounded-full border border-[#333]'
+                                className='w-8 h-8 rounded-full border border-[#333]'
                             />
                         )}
 
                         {/* NAME */}
-                        <span className='text-sm text-gray-300 hidden md:block'>
+                        <span className='text-sm  hidden md:block'>
                             {session.user.name}
                         </span>
 
                         {/* LOGOUT */}
                         <button
                             onClick={() => signOut()}
-                            className='text-sm bg-[#222] hover:bg-[#333] px-4 py-2 rounded-lg transition-all'
+                            className={`text-sm  ${userColor} px-4 py-2 rounded-lg transition-all`}
                         >
                             Logout
                         </button>
@@ -72,57 +74,3 @@ export default function Navbar({
     )
 }
 
-
-function ColorDropdown({
-    userColor,
-    setUserColor,
-}: {
-    userColor: string
-    setUserColor: (color: string) => void
-}) {
-    const [open, setOpen] = useState(false)
-
-    return (
-        <div className="relative inline-block text-left text-lg">
-
-            {/* BUTTON */}
-            <button
-                onClick={() => setOpen(!open)}
-                className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-white flex items-center gap-2"
-            >
-                <span
-                    className={`w-2 h-2 block rounded-full ${userColor}`}
-                />
-                {userColor}
-                <span className="ml-2 text-gray-400">▾</span>
-            </button>
-
-            {/* DROPDOWN */}
-            {open && (
-                <div className="absolute mt-2 w-full bg-[#111] border border-white/10 rounded-xl shadow-lg overflow-hidden z-50">
-
-                    {Object.entries(userColorClasses).map(
-                        ([key, value]) => (
-                            <button
-                                key={key}
-                                onClick={() => {
-                                    setUserColor(value)
-                                    setOpen(false)
-                                }}
-                                className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white/10 transition"
-                            >
-                                <span
-                                    className={`w-2 h-2 rounded-full ${value}`}
-                                />
-                                <span className="capitalize text-white">
-                                    {key}
-                                </span>
-                            </button>
-                        )
-                    )}
-
-                </div>
-            )}
-        </div>
-    )
-}

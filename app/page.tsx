@@ -98,7 +98,7 @@ export default function Home() {
 
           const createData =
             await createRes.json()
-          console.log('createDatacreateData',createData)
+          console.log('createDatacreateData', createData)
           const newConversation =
             createData.conversation
 
@@ -433,21 +433,8 @@ export default function Home() {
   if (!mounted) return null
 
   return (
-    <div className='flex h-screen overflow-hidden bg-black text-white'>
-      {/* SIDEBAR */}
-      <Sidebar
-        conversations={conversations}
-        activeConversation={
-          activeConversation
-        }
-        setActiveConversation={
-          handleConversationChange
-        }
-        createConversation={
-          createConversation
-        }
-        deleteConversation={deleteConversation}
-      />
+    <div className='flex h-screen overflow-hidden '>
+   
 
       {/* MAIN */}
       <div className='flex flex-col flex-1 min-w-0'>
@@ -472,6 +459,21 @@ export default function Home() {
           userColor={userColor}
         />
       </div>
+         {/* SIDEBAR */}
+      <Sidebar
+        conversations={conversations}
+        activeConversation={
+          activeConversation
+        }
+        setActiveConversation={
+          handleConversationChange
+        }
+        createConversation={
+          createConversation
+        }
+        deleteConversation={deleteConversation}
+        userColor={userColor}
+      />
     </div>
   )
 }

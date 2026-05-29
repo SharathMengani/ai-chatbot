@@ -1,9 +1,13 @@
+import { IoCreate, IoCreateOutline, IoCreateSharp } from "react-icons/io5"
+import { VscNewFolder } from "react-icons/vsc"
+
 type Props = {
   conversations: any[]
   activeConversation: string
   setActiveConversation: (id: string) => void
   createConversation: () => void
   deleteConversation: (id: string) => void
+  userColor : string
 }
 
 export default function Sidebar({
@@ -12,25 +16,21 @@ export default function Sidebar({
   setActiveConversation,
   createConversation,
   deleteConversation,
+  userColor
 }: Props) {
   return (
-    <div className='w-[280px] border-r border-white/10 bg-black p-3 flex flex-col'>
+    <div className='w-70 border-l dark:border-white/10 border-black/10 p-3 h-screen items-center justify-between flex flex-col '>
       {/* NEW CHAT */}
-      <button
-        onClick={createConversation}
-        className='w-full bg-white text-black rounded-xl py-3 font-semibold mb-4 hover:opacity-90 transition-all'
-      >
-        + New Chat
-      </button>
+      
 
       {/* CONVERSATIONS */}
-      <div className='flex flex-col gap-2 overflow-y-auto'>
+      <div className='flex flex-col gap-2 overflow-y-auto w-full'>
         {conversations.map((chat) => (
           <div
             key={chat?._id}
             className={`group flex items-center justify-between rounded-xl transition-all ${
               activeConversation === chat?._id
-                ? 'bg-white/10'
+                ? 'dark:bg-white/10 bg-black/10'
                 : 'hover:bg-white/5'
             }`}
           >
@@ -58,6 +58,12 @@ export default function Sidebar({
           </div>
         ))}
       </div>
+      <button
+        onClick={createConversation}
+        className={`w-full ${userColor} flex items-center gap-2 justify-center rounded-xl py-3 font-semibold mb-4 hover:opacity-90 transition-all`}
+      >
+        New Chat <VscNewFolder className="text-xl" />
+      </button>
     </div>
   )
 }
