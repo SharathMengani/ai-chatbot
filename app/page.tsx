@@ -158,15 +158,11 @@ export default function Home() {
     )
   }
 
-  // CREATE CONVERSATION
   const createConversation = async () => {
     try {
-      const res = await fetch(
-        '/api/conversations',
-        {
-          method: 'POST',
-        }
-      )
+      const res = await fetch('/api/conversations', {
+        method: 'POST',
+      })
 
       const data = await res.json()
 
@@ -174,56 +170,96 @@ export default function Home() {
         throw new Error(data.error)
       }
 
-      const newConversation =
-        data.conversation
+      const newConversation = {
+        ...data.conversation,
+        title: 'New Chat',
+        messages: [],
+      }
 
+      // ADD TO SIDEBAR
       setConversations((prev) => [
         newConversation,
         ...prev,
       ])
 
-      setActiveConversation(
-        newConversation?._id
-      )
+      // IMPORTANT
+      setActiveConversation(newConversation._id)
 
+      // RESET CHAT WINDOW
       setMessages([defaultMessage])
     } catch (error) {
       console.error(error)
     }
   }
 
-  // SEND MESSAGE
   const sendMessage = async () => {
     if (!input.trim() || loading) return
 
-    const currentConversationId =
-      activeConversation ||
-      conversations[0]?._id
-
-    if (!currentConversationId) {
-      console.error('No conversation found')
-      return
-    }
-
     const currentInput = input.trim()
 
-    const userMessage: Message = {
-      role: 'user',
-      type: 'text',
-      content: currentInput,
-    }
+    let currentConversationId =
+      activeConversation
 
-    // ADD USER MESSAGE IN UI
-    setMessages((prev) => [
-      ...prev,
-      userMessage,
-    ])
-
-    // CLEAR INPUT
-    setInput('')
     setLoading(true)
 
     try {
+      // ✅ AUTO CREATE CONVERSATION
+      if (!currentConversationId) {
+        const createRes = await fetch(
+          '/api/conversations',
+          {
+            method: 'POST',
+          }
+        )
+
+        const createData =
+          await createRes.json()
+
+        if (!createRes.ok) {
+          throw new Error(
+            createData.error ||
+            'Failed to create chat'
+          )
+        }
+
+        const newConversation = {
+          ...createData.conversation,
+          title:
+            currentInput.slice(0, 40),
+          messages: [],
+        }
+
+        // UPDATE SIDEBAR
+        setConversations((prev) => [
+          newConversation,
+          ...prev,
+        ])
+
+        // SET ACTIVE CHAT
+        setActiveConversation(
+          newConversation._id
+        )
+
+        currentConversationId =
+          newConversation._id
+      }
+
+      const userMessage: Message = {
+        role: 'user',
+        type: 'text',
+        content: currentInput,
+      }
+
+      // ADD USER MESSAGE
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        userMessage,
+      ])
+
+      // CLEAR INPUT
+      setInput('')
+
+      // SEND MESSAGE
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
@@ -237,7 +273,7 @@ export default function Home() {
         }),
       })
 
-      // UNAUTHORIZED
+      // AUTH ERROR
       if (response.status === 401) {
         setMessages([defaultMessage])
         return
@@ -245,35 +281,31 @@ export default function Home() {
 
       const data = await response.json()
 
-      // OTHER ERRORS
       if (!response.ok) {
         throw new Error(
           data.error || 'Request failed'
         )
       }
 
-      let assistantMessage: Message
+      // ASSISTANT MESSAGE
+      const assistantMessage: Message =
+        data.image
+          ? {
+            role: 'assistant',
+            type: 'image',
+            content: data.image,
+          }
+          : {
+            role: 'assistant',
+            type: 'text',
+            content:
+              data.reply ||
+              'No response generated',
+          }
 
-      // IMAGE RESPONSE
-      if (data.image) {
-        assistantMessage = {
-          role: 'assistant',
-          type: 'image',
-          content: data.image,
-        }
-      } else {
-        assistantMessage = {
-          role: 'assistant',
-          type: 'text',
-          content:
-            data.reply ||
-            'No response generated',
-        }
-      }
-
-      // ADD ASSISTANT MESSAGE
-      setMessages((prev) => [
-        ...prev,
+      // ADD AI MESSAGE
+      setMessages((prevMessages) => [
+        ...prevMessages,
         assistantMessage,
       ])
 
@@ -290,11 +322,13 @@ export default function Home() {
           return {
             ...conversation,
 
-            // FIRST USER MESSAGE AS TITLE
             title:
               conversation.title ===
                 'New Chat'
-                ? currentInput.slice(0, 40)
+                ? currentInput.slice(
+                  0,
+                  40
+                )
                 : conversation.title,
 
             messages: [
@@ -315,8 +349,8 @@ export default function Home() {
             : 'Something went wrong',
       }
 
-      setMessages((prev) => [
-        ...prev,
+      setMessages((prevMessages) => [
+        ...prevMessages,
         errorMessage,
       ])
     } finally {
