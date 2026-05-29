@@ -472,29 +472,22 @@ export default function Home() {
       {/* SIDEBAR */}
       <div
         className={`
-      fixed md:static top-0 right-0 h-full z-50 dark:bg-[#0f0f0f]
-      transition-transform duration-300
-      w-70 lg:w-120 md:w-100
-
-      ${sidebarOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"}
-    `}
+    fixed md:static top-0 right-0 h-full w-[280px] z-50 bg-black
+    transition-transform duration-300
+    ${sidebarOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"}
+  `}
       >
-        {/* CLOSE BUTTON */}
-        <button
-          className="md:hidden absolute -translate-y-1/2 top-1/2 -left-8 text-sm p-2 bg-white/50 rounded-l-2xl"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
-          {sidebarOpen ? <FiX size={18} /> : <FiMenu size={18} />}
-        </button>
-
-        <Sidebar
-          conversations={conversations}
-          activeConversation={activeConversation}
-          setActiveConversation={handleConversationChange}
-          createConversation={createConversation}
-          deleteConversation={deleteConversation}
-          userColor={userColor}
-        />
+        {/* MAKE THIS SCROLLABLE */}
+        <div className="h-full overflow-y-auto pb-20">
+          <Sidebar
+            conversations={conversations}
+            activeConversation={activeConversation}
+            setActiveConversation={handleConversationChange}
+            createConversation={createConversation}
+            deleteConversation={deleteConversation}
+            userColor={userColor}
+          />
+        </div>
       </div>
     </div>
   )
