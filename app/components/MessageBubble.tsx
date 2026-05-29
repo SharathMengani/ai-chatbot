@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { FaUserCircle } from 'react-icons/fa'
 import { LuBotMessageSquare } from 'react-icons/lu'
+import { Icon } from '../utils'
 
 type Message = {
     role: 'user' | 'assistant'
@@ -30,8 +31,8 @@ export default function MessageBubble({
                 }`}
         >
             {msg.role !== 'user' ?
-                <LuBotMessageSquare /> :
-                <FaUserCircle />
+                <Icon className='w-8' /> :
+                <FaUserCircle className='text-3xl' />
             }
             <div className='relative max-w-[85%]'>
 

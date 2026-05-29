@@ -71,4 +71,32 @@ export const Logo = ({ className, textColor, titleColor }: { className: string, 
 
   )
 }
+export const Icon = ({ className }: { className: string }) => {
+  return (
+    <svg className={className} viewBox="0 0 74 81" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M37 7V21" stroke="url(#paint0_linear_294_4)" stroke-width="3" stroke-linecap="round" />
+      <path d="M37 10C39.7614 10 42 7.76142 42 5C42 2.23858 39.7614 0 37 0C34.2386 0 32 2.23858 32 5C32 7.76142 34.2386 10 37 10Z" fill="url(#paint1_linear_294_4)" />
+      <path d="M52 19H22C9.84974 19 0 28.8497 0 41V59C0 71.1503 9.84974 81 22 81H52C64.1503 81 74 71.1503 74 59V41C74 28.8497 64.1503 19 52 19Z" fill="url(#paint2_linear_294_4)" />
+      <path opacity="0.85" d="M50 25H24C14.0589 25 6 33.0589 6 43V57C6 66.9411 14.0589 75 24 75H50C59.9411 75 68 66.9411 68 57V43C68 33.0589 59.9411 25 50 25Z" fill="#0D1117" />
+      <path d="M29 42C29 38.134 25.866 35 22 35C18.134 35 15 38.134 15 42V48C15 51.866 18.134 55 22 55C25.866 55 29 51.866 29 48V42Z" fill="white" />
+      <path d="M59 42C59 38.134 55.866 35 52 35C48.134 35 45 38.134 45 42V48C45 51.866 48.134 55 52 55C55.866 55 59 51.866 59 48V42Z" fill="white" />
+      <path d="M20 65C31.3333 73 42.6667 73 54 65" stroke="white" stroke-width="3.5" stroke-linecap="round" />
+      <defs>
+        <linearGradient id="paint0_linear_294_4" x1="37" y1="7" x2="38.9898" y2="7.14213" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#22D3EE" />
+          <stop offset="1" stop-color="#8B5CF6" />
+        </linearGradient>
+        <linearGradient id="paint1_linear_294_4" x1="32" y1="0" x2="42" y2="10" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#22D3EE" />
+          <stop offset="1" stop-color="#8B5CF6" />
+        </linearGradient>
+        <linearGradient id="paint2_linear_294_4" x1="0" y1="19" x2="61.0421" y2="91.8567" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#38BDF8" />
+          <stop offset="0.5" stop-color="#6366F1" />
+          <stop offset="1" stop-color="#A855F7" />
+        </linearGradient>
+      </defs>
+    </svg>
 
+  )
+}

@@ -19,12 +19,12 @@ export default function Sidebar({
   userColor
 }: Props) {
   return (
-    <div className='w-70 border-l dark:border-white/10 border-black/10 p-3 h-screen items-center justify-between flex flex-col '>
+    <div className='w-70 lg:w-120 md:w-100 border-l dark:border-white/10 border-black/10 p-3 h-screen items-center justify-between flex flex-col '>
       {/* NEW CHAT */}
       
 
       {/* CONVERSATIONS */}
-      <div className='flex flex-col gap-2 overflow-y-auto w-full'>
+      <div className='flex flex-col gap-2 overflow-y-auto w-full mt-2'>
         {conversations.map((chat) => (
           <div
             key={chat?._id}
