@@ -23,7 +23,15 @@ export default function Navbar({
   const isDark = theme === 'dark'
 
   const [open, setOpen] = useState(false)
-
+  if (status === "loading") {
+    return (
+      <div className="h-screen flex flex-col gap-4 p-4">
+        <div className="h-10 w-40 bg-gray-200 animate-pulse rounded" />
+        <div className="flex-1 bg-gray-200 animate-pulse rounded" />
+        <div className="h-12 bg-gray-200 animate-pulse rounded" />
+      </div>
+    )
+  }
   return (
     <header className="px-4 md:px-6 py-4 border-b sticky top-0 dark:border-white/10 border-black/10 backdrop-blur-xl z-10 flex justify-between items-center">
 
