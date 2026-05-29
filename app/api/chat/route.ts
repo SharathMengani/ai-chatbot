@@ -1,4 +1,3 @@
-
 import OpenAI from 'openai'
 
 import { getServerSession } from 'next-auth'
@@ -17,20 +16,44 @@ export async function POST(req: Request) {
 
     const session = await getServerSession()
 
+    // AUTH CHECK
     if (!session?.user?.email) {
       return Response.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
+        {
+          error: 'Unauthorized',
+        },
+        {
+          status: 401,
+        }
       )
     }
 
+    // BODY
     const body = await req.json()
+
     const message: string = body.message
+    const conversationId: string =
+      body.conversationId
 
     if (!message) {
       return Response.json(
-        { error: 'Message is required' },
-        { status: 400 }
+        {
+          error: 'Message is required',
+        },
+        {
+          status: 400,
+        }
+      )
+    }
+
+    if (!conversationId) {
+      return Response.json(
+        {
+          error: 'Conversation ID is required',
+        },
+        {
+          status: 400,
+        }
       )
     }
 
@@ -44,28 +67,35 @@ export async function POST(req: Request) {
       'image of',
     ]
 
-    const wantsImage = imageKeywords.some((word) =>
-      lower.includes(word)
+    const wantsImage = imageKeywords.some(
+      (word) => lower.includes(word)
     )
 
-    // ensure user doc exists
+    // ENSURE USER EXISTS
     await ChatHistory.findOneAndUpdate(
-      { email: session.user.email },
+      {
+        email: session.user.email,
+      },
       {
         $setOnInsert: {
           email: session.user.email,
-          messages: [],
+          conversations: [],
         },
       },
-      { upsert: true }
+      {
+        upsert: true,
+      }
     )
 
-    // save USER message
+    // SAVE USER MESSAGE
     await ChatHistory.updateOne(
-      { email: session.user.email },
+      {
+        email: session.user.email,
+        'conversations._id': conversationId,
+      },
       {
         $push: {
-          messages: {
+          'conversations.$.messages': {
             role: 'user',
             type: 'text',
             content: message,
@@ -74,17 +104,34 @@ export async function POST(req: Request) {
         },
       }
     )
-
+    // 👇 ADD HERE
+    await ChatHistory.updateOne(
+      {
+        email: session.user.email,
+        'conversations._id': conversationId,
+        'conversations.title': 'New Chat',
+      },
+      {
+        $set: {
+          'conversations.$.title':
+            message.slice(0, 40),
+        },
+      }
+    )
     // IMAGE FLOW
     if (wantsImage) {
       const imageReply =
         'Image generation is not enabled in this setup.'
 
+      // SAVE ASSISTANT MESSAGE
       await ChatHistory.updateOne(
-        { email: session.user.email },
+        {
+          email: session.user.email,
+          'conversations._id': conversationId,
+        },
         {
           $push: {
-            messages: {
+            'conversations.$.messages': {
               role: 'assistant',
               type: 'text',
               content: imageReply,
@@ -94,17 +141,21 @@ export async function POST(req: Request) {
         }
       )
 
-      return Response.json({ reply: imageReply })
+      return Response.json({
+        reply: imageReply,
+      })
     }
 
     // AI RESPONSE
     const completion =
       await openai.chat.completions.create({
         model: 'gemini-2.5-flash',
+
         messages: [
           {
             role: 'system',
-            content: 'You are a helpful AI assistant.',
+            content:
+              'You are a helpful AI assistant.',
           },
           {
             role: 'user',
@@ -117,12 +168,15 @@ export async function POST(req: Request) {
       completion.choices?.[0]?.message?.content ||
       'No response generated.'
 
-    // save AI message
+    // SAVE AI MESSAGE
     await ChatHistory.updateOne(
-      { email: session.user.email },
+      {
+        email: session.user.email,
+        'conversations._id': conversationId,
+      },
       {
         $push: {
-          messages: {
+          'conversations.$.messages': {
             role: 'assistant',
             type: 'text',
             content: aiReply,
@@ -132,18 +186,25 @@ export async function POST(req: Request) {
       }
     )
 
-    return Response.json({ reply: aiReply })
+    return Response.json({
+      reply: aiReply,
+    })
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong'
 
     if (error instanceof Error) {
-      console.error('Error:', error.message)
+      console.error('Chat API Error:', error.message)
+
       errorMessage = error.message
     }
 
     return Response.json(
-      { error: errorMessage },
-      { status: 500 }
+      {
+        error: errorMessage,
+      },
+      {
+        status: 500,
+      }
     )
   }
 }

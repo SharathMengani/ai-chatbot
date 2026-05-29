@@ -7,7 +7,7 @@ export default function ChatInput({
   userColor
 }: any) {
   return (
-    <div className='fixed bottom-0 w-full p-5 bg-linear-to-t from-black to-transparent'>
+    <div className='relative bottom-0 w-full p-5 bg-linear-to-t from-black to-transparent'>
       <div className='max-w-3xl mx-auto'>
         
         <div className='bg-white/5 border border-white/10 backdrop-blur-2xl rounded-3xl p-4 shadow-xl focus-within:ring-2 focus-within:ring-blue-500/40'>

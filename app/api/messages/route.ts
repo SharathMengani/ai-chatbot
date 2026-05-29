@@ -1,11 +1,17 @@
-import ChatHistory from '@/app/models/ChatHistory'
 import { getServerSession } from 'next-auth'
+
+import { connectDB } from '@/app/lib/mongodb'
+import ChatHistory from '@/app/models/ChatHistory'
 
 export async function GET() {
   try {
+    // CONNECT DB
+    await connectDB()
+
+    // GET SESSION
     const session = await getServerSession()
 
-    // 1. NO SESSION
+    // AUTH CHECK
     if (!session?.user?.email) {
       return Response.json(
         { error: 'Unauthorized' },
@@ -13,33 +19,37 @@ export async function GET() {
       )
     }
 
-    // 2. FIND USER CHAT HISTORY
+    // FIND USER CHAT HISTORY
     const data = await ChatHistory.findOne({
       email: session.user.email,
     })
 
-    // 3. NO DOCUMENT FOUND
+    // IF NO USER YET
     if (!data) {
-      return Response.json([])
+      return Response.json({
+        conversations: [],
+      })
     }
 
-    // 4. NO MESSAGES ARRAY OR EMPTY
-    if (!data.messages || data.messages.length === 0) {
-      return Response.json([])
-    }
-
-    // 5. RETURN MESSAGES
-    return Response.json(data.messages)
-  } catch (error: unknown) {
-    let message = 'Something went wrong'
-
-    if (error instanceof Error) {
-      message = error.message
-    }
+    // RETURN CONVERSATIONS
+    return Response.json({
+      conversations:
+        data.conversations || [],
+    })
+  } catch (error) {
+    console.error(
+      'MESSAGES API ERROR:',
+      error
+    )
 
     return Response.json(
-      { error: message },
-      { status: 500 }
+      {
+        error:
+          'Failed to fetch conversations',
+      },
+      {
+        status: 500,
+      }
     )
   }
 }
