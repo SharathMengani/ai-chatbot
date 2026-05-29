@@ -24,7 +24,8 @@ export default function Navbar({
         <header className='px-6 py-4 border-b sticky top-0 border-[#222] bg-black/80 backdrop-blur-xl text-[20px] font-semibold z-10 flex justify-between items-center'>
 
             {/* LOGO */}
-            <h1 className='text-white'>AI Assistant</h1>
+            <h1 className='text-white'>\
+                AI Assistant</h1>
 
             {/* RIGHT SIDE */}
             <div className='flex items-center gap-4'>

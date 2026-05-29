@@ -1,17 +1,22 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
-const MessageSchema = new mongoose.Schema({
-  role: String,
-  type: String,
-  content: String,
-  createdAt: {
-    type: Date,
-    default: Date.now,
+const MessageSchema = new Schema(
+  {
+    role: String,
+    type: String,
+    content: String,
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-})
+  {
+    _id: true,
+  }
+)
 
-const ConversationSchema =
-  new mongoose.Schema({
+const ConversationSchema = new Schema(
+  {
     title: {
       type: String,
       default: 'New Chat',
@@ -23,18 +28,21 @@ const ConversationSchema =
       type: Date,
       default: Date.now,
     },
-  })
+  },
+  {
+    _id: true,
+  }
+)
 
-const ChatHistorySchema =
-  new mongoose.Schema({
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+const ChatHistorySchema = new Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 
-    conversations: [ConversationSchema],
-  })
+  conversations: [ConversationSchema],
+})
 
 export default mongoose.models.ChatHistory ||
   mongoose.model(

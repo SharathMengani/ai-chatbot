@@ -56,6 +56,7 @@ export default function Home() {
     null
   )
 
+
   // AUTO SCROLL
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
@@ -97,7 +98,7 @@ export default function Home() {
 
           const createData =
             await createRes.json()
-
+          console.log('createDatacreateData',createData)
           const newConversation =
             createData.conversation
 

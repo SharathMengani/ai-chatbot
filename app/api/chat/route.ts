@@ -1,6 +1,7 @@
-import OpenAI from 'openai'
 
+import OpenAI from 'openai'
 import { getServerSession } from 'next-auth'
+
 import { connectDB } from '@/app/lib/mongodb'
 import ChatHistory from '@/app/models/ChatHistory'
 
@@ -16,7 +17,10 @@ export async function POST(req: Request) {
 
     const session = await getServerSession()
 
-    // AUTH
+    // =================================================
+    // AUTH CHECK
+    // =================================================
+
     if (!session?.user?.email) {
       return Response.json(
         {
@@ -28,14 +32,19 @@ export async function POST(req: Request) {
       )
     }
 
-    // BODY
+    // =================================================
+    // REQUEST BODY
+    // =================================================
+
     const body = await req.json()
 
-    const message: string = body.message
+    const message: string =
+      body.message?.trim()
+
     let conversationId: string =
       body.conversationId
 
-    if (!message?.trim()) {
+    if (!message) {
       return Response.json(
         {
           error: 'Message is required',
@@ -46,7 +55,10 @@ export async function POST(req: Request) {
       )
     }
 
+    // =================================================
     // ENSURE USER EXISTS
+    // =================================================
+
     await ChatHistory.findOneAndUpdate(
       {
         email: session.user.email,
@@ -63,28 +75,29 @@ export async function POST(req: Request) {
       }
     )
 
-    // AUTO CREATE CONVERSATION
-    // AUTO CREATE CONVERSATION
+    // =================================================
+    // CREATE / REUSE CONVERSATION
+    // =================================================
+
     if (!conversationId) {
-      // ✅ FIRST CHECK EMPTY CHAT EXISTS
       const existingUser =
         await ChatHistory.findOne({
           email: session.user.email,
         })
 
+      // REUSE EMPTY CHAT
       const emptyConversation =
         existingUser?.conversations?.find(
-          (c: any) =>
-            !c.messages ||
-            c.messages.length === 0
+          (conversation: any) =>
+            !conversation.messages ||
+            conversation.messages.length === 0
         )
 
-      // ✅ REUSE EMPTY CHAT
       if (emptyConversation) {
         conversationId =
           emptyConversation._id.toString()
       } else {
-        // ✅ CREATE NEW CHAT ONLY ONCE
+        // CREATE NEW CHAT
         await ChatHistory.updateOne(
           {
             email: session.user.email,
@@ -106,18 +119,20 @@ export async function POST(req: Request) {
             email: session.user.email,
           })
 
-        const latestConversation =
+        const newConversation =
           updatedUser?.conversations?.[
-          updatedUser.conversations.length -
-          1
+            updatedUser.conversations.length - 1
           ]
 
         conversationId =
-          latestConversation?._id?.toString()
+          newConversation?._id?.toString()
       }
     }
 
+    // =================================================
     // FINAL SAFETY CHECK
+    // =================================================
+
     if (!conversationId) {
       return Response.json(
         {
@@ -129,6 +144,10 @@ export async function POST(req: Request) {
         }
       )
     }
+
+    // =================================================
+    // IMAGE DETECTION
+    // =================================================
 
     const lower = message.toLowerCase()
 
@@ -144,47 +163,51 @@ export async function POST(req: Request) {
       (word) => lower.includes(word)
     )
 
-    // SAVE USER MESSAGE
-    await ChatHistory.updateOne(
-      {
-        email: session.user.email,
-        'conversations._id':
-          conversationId,
-      },
-      {
-        $push: {
-          'conversations.$.messages': {
-            role: 'user',
-            type: 'text',
-            content: message,
-            createdAt: new Date(),
-          },
-        },
-      }
-    )
-
-    // UPDATE TITLE IF "New Chat"
-    await ChatHistory.updateOne(
-      {
-        email: session.user.email,
-        'conversations._id':
-          conversationId,
-        'conversations.title':
-          'New Chat',
-      },
-      {
-        $set: {
-          'conversations.$.title':
-            message.slice(0, 40),
-        },
-      }
-    )
-
+    // =================================================
     // IMAGE FLOW
+    // =================================================
+
     if (wantsImage) {
       const imageReply =
         'Image generation is not enabled in this setup.'
 
+      // SAVE USER MESSAGE
+      await ChatHistory.updateOne(
+        {
+          email: session.user.email,
+          'conversations._id':
+            conversationId,
+        },
+        {
+          $push: {
+            'conversations.$.messages': {
+              role: 'user',
+              type: 'text',
+              content: message,
+              createdAt: new Date(),
+            },
+          },
+        }
+      )
+
+      // UPDATE TITLE
+      await ChatHistory.updateOne(
+        {
+          email: session.user.email,
+          'conversations._id':
+            conversationId,
+          'conversations.title':
+            'New Chat',
+        },
+        {
+          $set: {
+            'conversations.$.title':
+              message.slice(0, 40),
+          },
+        }
+      )
+
+      // SAVE ASSISTANT MESSAGE
       await ChatHistory.updateOne(
         {
           email: session.user.email,
@@ -209,41 +232,91 @@ export async function POST(req: Request) {
       })
     }
 
+    // =================================================
     // AI RESPONSE
-    let aiReply = ''
+    // =================================================
 
     try {
       const completion =
-        await openai.chat.completions.create(
-          {
-            model: 'gemini-2.5-flash',
+        await openai.chat.completions.create({
+          model: 'gemini-2.5-flash',
 
-            messages: [
-              {
-                role: 'system',
-                content:
-                  'You are a helpful AI assistant.',
-              },
-              {
-                role: 'user',
-                content: message,
-              },
-            ],
-          }
-        )
+          messages: [
+            {
+              role: 'system',
+              content:
+                'You are a helpful AI assistant.',
+            },
+            {
+              role: 'user',
+              content: message,
+            },
+          ],
+        })
 
-      aiReply =
+      const aiReply =
         completion.choices?.[0]
-          ?.message?.content || ''
+          ?.message?.content?.trim()
 
-      // EMPTY RESPONSE CHECK
-      if (!aiReply.trim()) {
-        throw new Error(
-          'Empty response from AI'
+      // EMPTY RESPONSE
+      if (!aiReply) {
+        return Response.json(
+          {
+            error:
+              'Empty response from AI',
+          },
+          {
+            status: 500,
+          }
         )
       }
 
+      // =================================================
+      // SAVE USER MESSAGE
+      // =================================================
+
+      await ChatHistory.updateOne(
+        {
+          email: session.user.email,
+          'conversations._id':
+            conversationId,
+        },
+        {
+          $push: {
+            'conversations.$.messages': {
+              role: 'user',
+              type: 'text',
+              content: message,
+              createdAt: new Date(),
+            },
+          },
+        }
+      )
+
+      // =================================================
+      // UPDATE TITLE
+      // =================================================
+
+      await ChatHistory.updateOne(
+        {
+          email: session.user.email,
+          'conversations._id':
+            conversationId,
+          'conversations.title':
+            'New Chat',
+        },
+        {
+          $set: {
+            'conversations.$.title':
+              message.slice(0, 40),
+          },
+        }
+      )
+
+      // =================================================
       // SAVE AI MESSAGE
+      // =================================================
+
       await ChatHistory.updateOne(
         {
           email: session.user.email,
@@ -268,11 +341,11 @@ export async function POST(req: Request) {
       })
     } catch (error: any) {
       console.error(
-        'OpenAI/Gemini Error:',
-        error.message
+        'AI ERROR:',
+        error?.message
       )
 
-      // ❌ DO NOT SAVE ERROR MESSAGE IN DB
+      // DO NOT SAVE MESSAGES ON FAILURE
       return Response.json(
         {
           error:
@@ -285,21 +358,17 @@ export async function POST(req: Request) {
       )
     }
   } catch (error: unknown) {
-    let errorMessage =
-      'Something went wrong'
-
-    if (error instanceof Error) {
-      console.error(
-        'Chat API Error:',
-        error.message
-      )
-
-      errorMessage = error.message
-    }
+    console.error(
+      'CHAT API ERROR:',
+      error
+    )
 
     return Response.json(
       {
-        error: errorMessage,
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Something went wrong',
       },
       {
         status: 500,
