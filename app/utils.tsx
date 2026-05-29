@@ -25,12 +25,12 @@ export const userColorClasses = {
 export const Logo = ({ className, textColor, titleColor }: { className: string, textColor: string, titleColor: string }) => {
   return (
     <svg className={className} viewBox="0 0 322 81" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M37 7V21" stroke="url(#paint0_linear_288_17)" stroke-width="3" stroke-linecap="round" />
+      <path d="M37 7V21" stroke="url(#paint0_linear_288_17)" strokeWidth="3" strokeLinecap="round" />
       <path d="M37 10C39.7614 10 42 7.76142 42 5C42 2.23858 39.7614 0 37 0C34.2386 0 32 2.23858 32 5C32 7.76142 34.2386 10 37 10Z" fill="url(#paint1_linear_288_17)" />
       <path d="M52 19H22C9.84974 19 0 28.8497 0 41V59C0 71.1503 9.84974 81 22 81H52C64.1503 81 74 71.1503 74 59V41C74 28.8497 64.1503 19 52 19Z" fill="url(#paint2_linear_288_17)" />
       <path d="M29 42C29 38.134 25.866 35 22 35C18.134 35 15 38.134 15 42V48C15 51.866 18.134 55 22 55C25.866 55 29 51.866 29 48V42Z" fill="white" />
       <path d="M59 42C59 38.134 55.866 35 52 35C48.134 35 45 38.134 45 42V48C45 51.866 48.134 55 52 55C55.866 55 59 51.866 59 48V42Z" fill="white" />
-      <path d="M20 65C31.3333 73 42.6667 73 54 65" stroke="white" stroke-width="3.5" stroke-linecap="round" />
+      <path d="M20 65C31.3333 73 42.6667 73 54 65" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
       <path d="M91.9197 48H84.9993L95.544 17.4545H103.866L114.396 48H107.476L99.8246 24.4347H99.5859L91.9197 48ZM91.4872 35.9936H107.834V41.0348H91.4872V35.9936ZM124.531 17.4545V48H118.073V17.4545H124.531ZM166.516
        28.1484H159.983C159.864 27.3033 159.62 26.5526 159.252 25.8963C158.885 25.2301 158.412 24.6634 157.836 24.196C157.259 23.7287 156.593 23.3707 155.837 23.1222C155.091 22.8736 154.281 22.7493 153.406 22.7493C151.825
         22.7493 150.448 23.142 149.275 23.9276C148.101 24.7031 147.191 25.8366 146.545 27.3281C145.899 28.8097 145.576 30.6094 145.576 32.7273C145.576 34.9048 145.899 36.7344 146.545 38.2159C147.201 39.6974 148.116 40.8161 149.289
@@ -53,17 +53,17 @@ export const Logo = ({ className, textColor, titleColor }: { className: string, 
        76.1669 308.864 75.5672 308.699 74.7784L310.051 74.4403C310.18 74.9394 310.424 75.3137 310.782 75.5632C311.144 75.8127 311.617 75.9375 312.201 75.9375C312.865 75.9375 313.392 75.7966 313.782 75.5149C314.177 75.2292 314.374 74.8871 314.374 74.4886C314.374 74.1667 314.261 73.897 314.036 73.6797C313.81 73.4583 313.464 73.2933 312.997 73.1847L311.452 72.8224C310.603 72.6212 309.979 72.3093 309.581 71.8867C309.186 71.4601 308.989 70.9268 308.989 70.2869C308.989 69.7637 309.136 69.3009 309.43 68.8984C309.727 68.496 310.132 68.18 310.643 67.9506C311.158 67.7212 311.742 67.6065 312.394 67.6065C313.311 67.6065 314.032 67.8078 314.555 68.2102C315.082 68.6127 315.456 69.1439 315.678 69.804ZM319.03 77.0966C318.732 77.0966 318.476 76.9899 318.263 76.7766C318.05 76.5633 317.943 76.3078 317.943 76.0099C317.943 75.7121 318.05 75.4566 318.263 75.2433C318.476 75.0299 318.732 74.9233 319.03 74.9233C319.328 74.9233 319.583 75.0299 319.797 75.2433C320.01 75.4566 320.116 75.7121 320.116 76.0099C320.116 76.2071 320.066 76.3883 319.966 76.5533C319.869 76.7183 319.738 76.8511 319.573 76.9517C319.412 77.0483 319.231 77.0966 319.03 77.0966Z" fill={titleColor} />
       <defs>
         <linearGradient id="paint0_linear_288_17" x1="37" y1="7" x2="38.9898" y2="7.14213" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#22D3EE" />
-          <stop offset="1" stop-color="#8B5CF6" />
+          <stop stopColor="#22D3EE" />
+          <stop offset="1" stopColor="#8B5CF6" />
         </linearGradient>
         <linearGradient id="paint1_linear_288_17" x1="32" y1="0" x2="42" y2="10" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#22D3EE" />
-          <stop offset="1" stop-color="#8B5CF6" />
+          <stop stopColor="#22D3EE" />
+          <stop offset="1" stopColor="#8B5CF6" />
         </linearGradient>
         <linearGradient id="paint2_linear_288_17" x1="0" y1="19" x2="61.0421" y2="91.8567" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#38BDF8" />
-          <stop offset="0.5" stop-color="#6366F1" />
-          <stop offset="1" stop-color="#A855F7" />
+          <stop stopColor="#38BDF8" />
+          <stop offset="0.5" stopColor="#6366F1" />
+          <stop offset="1" stopColor="#A855F7" />
         </linearGradient>
       </defs>
     </svg>
@@ -74,26 +74,26 @@ export const Logo = ({ className, textColor, titleColor }: { className: string, 
 export const Icon = ({ className }: { className: string }) => {
   return (
     <svg className={className} viewBox="0 0 74 81" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M37 7V21" stroke="url(#paint0_linear_294_4)" stroke-width="3" stroke-linecap="round" />
+      <path d="M37 7V21" stroke="url(#paint0_linear_294_4)" strokeWidth="3" strokeLinecap="round" />
       <path d="M37 10C39.7614 10 42 7.76142 42 5C42 2.23858 39.7614 0 37 0C34.2386 0 32 2.23858 32 5C32 7.76142 34.2386 10 37 10Z" fill="url(#paint1_linear_294_4)" />
       <path d="M52 19H22C9.84974 19 0 28.8497 0 41V59C0 71.1503 9.84974 81 22 81H52C64.1503 81 74 71.1503 74 59V41C74 28.8497 64.1503 19 52 19Z" fill="url(#paint2_linear_294_4)" />
       <path opacity="0.85" d="M50 25H24C14.0589 25 6 33.0589 6 43V57C6 66.9411 14.0589 75 24 75H50C59.9411 75 68 66.9411 68 57V43C68 33.0589 59.9411 25 50 25Z" fill="#0D1117" />
       <path d="M29 42C29 38.134 25.866 35 22 35C18.134 35 15 38.134 15 42V48C15 51.866 18.134 55 22 55C25.866 55 29 51.866 29 48V42Z" fill="white" />
       <path d="M59 42C59 38.134 55.866 35 52 35C48.134 35 45 38.134 45 42V48C45 51.866 48.134 55 52 55C55.866 55 59 51.866 59 48V42Z" fill="white" />
-      <path d="M20 65C31.3333 73 42.6667 73 54 65" stroke="white" stroke-width="3.5" stroke-linecap="round" />
+      <path d="M20 65C31.3333 73 42.6667 73 54 65" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
       <defs>
         <linearGradient id="paint0_linear_294_4" x1="37" y1="7" x2="38.9898" y2="7.14213" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#22D3EE" />
-          <stop offset="1" stop-color="#8B5CF6" />
+          <stop stopColor="#22D3EE" />
+          <stop offset="1" stopColor="#8B5CF6" />
         </linearGradient>
         <linearGradient id="paint1_linear_294_4" x1="32" y1="0" x2="42" y2="10" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#22D3EE" />
-          <stop offset="1" stop-color="#8B5CF6" />
+          <stop stopColor="#22D3EE" />
+          <stop offset="1" stopColor="#8B5CF6" />
         </linearGradient>
         <linearGradient id="paint2_linear_294_4" x1="0" y1="19" x2="61.0421" y2="91.8567" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#38BDF8" />
-          <stop offset="0.5" stop-color="#6366F1" />
-          <stop offset="1" stop-color="#A855F7" />
+          <stop stopColor="#38BDF8" />
+          <stop offset="0.5" stopColor="#6366F1" />
+          <stop offset="1" stopColor="#A855F7" />
         </linearGradient>
       </defs>
     </svg>
