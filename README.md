@@ -51,8 +51,11 @@ It provides a smooth ChatGPT-style experience with a modern UI and fast response
 - **Language:** TypeScript  
 - **Styling:** Tailwind CSS  
 - **AI APIs:** Gemini / OpenAI  
+- **Database:** MongoDB Atlas
+- **Authentication:** Google OAuth (NextAuth.js / OAuth 2.0)
 - **Backend:** Next.js API Routes  
 - **Deployment:** Vercel  
+
 
 ---
 
