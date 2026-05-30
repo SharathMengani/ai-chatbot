@@ -1,4 +1,4 @@
-import { IoCreate, IoCreateOutline, IoCreateSharp } from "react-icons/io5"
+import { FaTimes } from "react-icons/fa"
 import { VscNewFolder } from "react-icons/vsc"
 
 type Props = {
@@ -19,7 +19,7 @@ export default function Sidebar({
   userColor
 }: Props) {
   return (
-    <div className='w-70 lg:w-120 md:w-100 border-l dark:border-white/10 border-black/10 p-3 md:h-screen h-full items-center justify-between flex flex-col '>
+    <div className='w-70 border-r dark:border-white/10 border-black/10 p-3 md:h-screen h-full items-center justify-between flex flex-col '>
       {/* NEW CHAT */}
       
 
@@ -53,7 +53,7 @@ export default function Sidebar({
               }
               className='px-3 text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-all'
             >
-              ✕
+              <FaTimes/>
             </button>
           </div>
         ))}

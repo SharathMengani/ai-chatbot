@@ -14,6 +14,7 @@ import ChatInput from './components/ChatInput'
 
 import { userColorClasses } from './utils'
 import { FiMenu, FiX } from 'react-icons/fi'
+import { useSession } from 'next-auth/react'
 
 type Message = {
   role: 'user' | 'assistant'
@@ -34,6 +35,7 @@ const defaultMessage: Message = {
 }
 
 export default function Home() {
+  const { data: session, status } = useSession();
   const [input, setInput] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -437,18 +439,44 @@ export default function Home() {
   return (
     <div className="flex h-screen overflow-hidden relative">
 
-      {/* MOBILE MENU BUTTON */}
+      {/* SIDEBAR */}
+      <div
+        className={`
+      fixed md:static top-0 left-0 h-full z-50 dark:bg-[#0f0f0f]
+      transition-transform duration-300
+      w-70
 
+      ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+    `}
+      >
+        {/* CLOSE BUTTON */}
+        <button
+          className={`md:hidden absolute -translate-y-1/2 top-24 -right-8.5 text-sm p-2 rounded-r-2xl ${userColor}`}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+        >
+          {sidebarOpen ? <FiX size={18} /> : <FiMenu size={18} />}
+        </button>
+
+        <Sidebar
+          conversations={conversations}
+          activeConversation={activeConversation}
+          setActiveConversation={handleConversationChange}
+          createConversation={createConversation}
+          deleteConversation={deleteConversation}
+          userColor={userColor}
+        />
+      </div>
 
       {/* MAIN */}
       <div className="flex flex-col flex-1 min-w-0">
-        <Navbar userColor={userColor} setUserColor={setUserColor} />
+        <Navbar userColor={userColor} setUserColor={setUserColor} session={session} status={status} />
 
         <ChatMessages
           messages={messages}
           loading={loading}
           bottomRef={bottomRef}
           userColor={userColor}
+          session={session}
         />
 
         <ChatInput
@@ -469,33 +497,7 @@ export default function Home() {
         />
       )}
 
-      {/* SIDEBAR */}
-      <div
-        className={`
-      fixed md:static top-0 right-0 h-full z-50 dark:bg-[#0f0f0f]
-      transition-transform duration-300
-      w-70 lg:w-120 md:w-100
 
-      ${sidebarOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"}
-    `}
-      >
-        {/* CLOSE BUTTON */}
-        <button
-          className="md:hidden absolute -translate-y-1/2 top-1/2 -left-8 text-sm p-2 bg-white/50 rounded-l-2xl"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
-          {sidebarOpen ? <FiX size={18} /> : <FiMenu size={18} />}
-        </button>
-
-        <Sidebar
-          conversations={conversations}
-          activeConversation={activeConversation}
-          setActiveConversation={handleConversationChange}
-          createConversation={createConversation}
-          deleteConversation={deleteConversation}
-          userColor={userColor}
-        />
-      </div>
     </div>
   )
 }

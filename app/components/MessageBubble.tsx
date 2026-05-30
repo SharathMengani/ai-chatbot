@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { FaUserCircle } from 'react-icons/fa'
 import { LuBotMessageSquare } from 'react-icons/lu'
 import { Icon } from '../utils'
+import Image from 'next/image'
 
 type Message = {
     role: 'user' | 'assistant'
@@ -13,11 +14,13 @@ type Message = {
 export default function MessageBubble({
     msg,
     onChangeVariant,
-    userColor
+    userColor,
+    session
 }: {
     msg: Message
     onChangeVariant?: (variant: Message['variant']) => void
     userColor: any
+    session: any
 }) {
     const [open, setOpen] = useState(false)
 
@@ -32,7 +35,15 @@ export default function MessageBubble({
         >
             {msg.role !== 'user' ?
                 <Icon className='w-8' /> :
-                <FaUserCircle className='text-3xl' />
+
+                (session && session.user.image) && (
+                    <img
+                        src={session.user.image}
+                        alt="User"
+                        className="w-8 h-8 rounded-full border border-[#333]"
+                    />
+                )
+
             }
             <div className='relative max-w-[85%]'>
 

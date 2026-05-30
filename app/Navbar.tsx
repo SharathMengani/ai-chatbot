@@ -12,13 +12,15 @@ import { BiMenu } from 'react-icons/bi'
 type NavbarProps = {
   userColor: string
   setUserColor: (color: string) => void
+  session: any
+  status: any
 }
 
 export default function Navbar({
   userColor,
   setUserColor,
+  session, status
 }: NavbarProps) {
-  const { data: session } = useSession()
   const { theme } = useTheme()
   const isDark = theme === 'dark'
 
@@ -37,7 +39,7 @@ export default function Navbar({
 
       {/* LOGO */}
       <Logo
-        className="w-[140px] md:w-[200px]"
+        className="w-35 md:w-50"
         textColor={isDark ? '#fff' : '#000'}
         titleColor={isDark ? '#dadfe3' : '#b5b5b5'}
       />
@@ -83,7 +85,7 @@ export default function Navbar({
         className="md:hidden"
         onClick={() => setOpen(!open)}
       >
-        {open ? <FaTimes /> : <BiMenu />}
+        {open ? <FaTimes className='text-2xl' /> : <BiMenu className='text-2xl' />}
       </button>
 
       {/* MOBILE MENU */}

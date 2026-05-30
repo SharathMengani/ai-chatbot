@@ -10,19 +10,21 @@ export default function ChatMessages({
     messages,
     loading,
     bottomRef,
-    userColor
+    userColor,
+    session
 }: {
     messages: Message[]
     loading: boolean
     bottomRef: React.RefObject<HTMLDivElement | null>
     userColor: any
+    session: any
 }) {
     return (
         <div className='flex-1 overflow-y-auto px-4 pt-10 pb-0'>
             <div className='max-w-3xl mx-auto flex flex-col gap-6'>
 
                 {messages.map((msg, index) => (
-                    <MessageBubble key={index} msg={msg} userColor={userColor} />
+                    <MessageBubble key={index} msg={msg} userColor={userColor} session={session} />
                 ))}
 
                 {loading && (
