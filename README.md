@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# 🤖 AI Chatbot
 
-First, run the development server:
+### A modern ChatGPT-like AI assistant built with Next.js + Gemini/OpenAI APIs
+
+<br/>
+
+<!-- HERO BANNER -->
+<img src="./public/banner.png" width="90%" />
+
+<br/><br/>
+
+<!-- BADGES -->
+[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Vercel-black?style=for-the-badge)](https://your-project.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/)
+[![Gemini API](https://img.shields.io/badge/Gemini%20API-4285F4?style=for-the-badge&logo=google)](https://ai.google.dev/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai)](https://openai.com/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+
+</div>
+
+---
+
+
+## 🌟 Overview
+
+This AI Chatbot is a **smart conversational assistant** that generates human-like responses using powerful LLM APIs like **Google Gemini** or **OpenAI**.
+
+It provides a smooth ChatGPT-style experience with a modern UI and fast response streaming.
+
+---
+
+## ✨ Features
+
+- 💬 Real-time AI chat interface  
+- 🧠 Powered by Gemini / OpenAI  
+- ⚡ Streaming fast responses  
+- 🎨 Modern ChatGPT-style UI  
+- 📱 Fully responsive design  
+- 🌙 Dark mode support  
+- 🔐 Secure API handling via environment variables  
+- ☁️ One-click deployment on Vercel  
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js (App Router)  
+- **Language:** TypeScript  
+- **Styling:** Tailwind CSS  
+- **AI APIs:** Gemini / OpenAI  
+- **Backend:** Next.js API Routes  
+- **Deployment:** Vercel  
+
+---
+
+## 📁 Project Structure
+
+```bash id="7f8k1d"
+/app
+  /api            # AI chat backend routes
+  /components     # UI components
+  /lib            # Utility functions
+/public           # Static assets
+
+## 📦 Installation
+
+Clone the repository:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git clone https://github.com/SharathMengani/ai-chatbot.git
+cd ai-chatbot
