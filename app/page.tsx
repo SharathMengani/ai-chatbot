@@ -434,6 +434,16 @@ export default function Home() {
     }
   }
 
+  if (status === "loading") {
+    return (
+      <div className="h-screen flex flex-col gap-4 p-4">
+        <img src="" alt="" />
+        <div className="h-10 w-40 bg-black animate-pulse rounded" />
+        <div className="flex-1 bg-black animate-pulse rounded" />
+        <div className="h-12 bg-black animate-pulse rounded" />
+      </div>
+    )
+  }
   if (!mounted) return null
 
   return (

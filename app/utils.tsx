@@ -1,23 +1,23 @@
 export const userColorClasses = {
-  blue: 'bg-blue-400 dark:bg-blue-500 text-slate-900 dark:text-white',
-  green: 'bg-green-400 dark:bg-green-500 text-slate-900 dark:text-white',
-  purple: 'bg-purple-400 dark:bg-purple-500 text-slate-900 dark:text-white',
+  blue: 'border-2 border-blue-400 dark:border-2 border-blue-500 text-slate-900 dark:text-white',
+  green: 'border-2 border-green-400 dark:border-2 border-green-500 text-slate-900 dark:text-white',
+  purple: 'border-2 border-purple-400 dark:border-2 border-purple-500 text-slate-900 dark:text-white',
 
-  red: 'bg-red-400 dark:bg-red-500 text-slate-900 dark:text-white',
-  pink: 'bg-pink-400 dark:bg-pink-500 text-slate-900 dark:text-white',
-  yellow: 'bg-yellow-300 dark:bg-yellow-400 text-slate-900 dark:text-white',
+  red: 'border-2 border-red-400 dark:border-2 border-red-500 text-slate-900 dark:text-white',
+  pink: 'border-2 border-pink-400 dark:border-2 border-pink-500 text-slate-900 dark:text-white',
+  yellow: 'border-2 border-yellow-300 dark:border-2 border-yellow-400 text-slate-900 dark:text-white',
 
-  orange: 'bg-orange-400 dark:bg-orange-500 text-slate-900 dark:text-white',
+  orange: 'border-2 border-orange-400 dark:border-2 border-orange-500 text-slate-900 dark:text-white',
 
-  indigo: 'bg-indigo-400 dark:bg-indigo-500 text-slate-900 dark:text-white',
-  cyan: 'bg-cyan-400 dark:bg-cyan-500 text-slate-900 dark:text-white',
-  teal: 'bg-teal-400 dark:bg-teal-500 text-slate-900 dark:text-white',
+  indigo: 'border-2 border-indigo-400 dark:border-2 border-indigo-500 text-slate-900 dark:text-white',
+  cyan: 'border-2 border-cyan-400 dark:border-2 border-cyan-500 text-slate-900 dark:text-white',
+  teal: 'border-2 border-teal-400 dark:border-2 border-teal-500 text-slate-900 dark:text-white',
 
-  emerald: 'bg-emerald-400 dark:bg-emerald-500 text-slate-900 dark:text-white',
-  violet: 'bg-violet-400 dark:bg-violet-500 text-slate-900 dark:text-white',
-  fuchsia: 'bg-fuchsia-400 dark:bg-fuchsia-500 text-slate-900 dark:text-white',
+  emerald: 'border-2 border-emerald-400 dark:border-2 border-emerald-500 text-slate-900 dark:text-white',
+  violet: 'border-2 border-violet-400 dark:border-2 border-violet-500 text-slate-900 dark:text-white',
+  fuchsia: 'border-2 border-fuchsia-400 dark:border-2 border-fuchsia-500 text-slate-900 dark:text-white',
 
-  slate: 'bg-slate-300 dark:bg-slate-600 text-slate-900 dark:text-white',
+  slate: 'border-2 border-slate-300 dark:border-2 border-slate-600 text-slate-900 dark:text-white',
 }
 
 

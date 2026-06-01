@@ -1,6 +1,6 @@
 
 "use client";
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { userColorClasses } from "../utils";
 import { RiArrowDownSLine } from "react-icons/ri";
 
@@ -46,8 +46,9 @@ export function ColorDropdown({
                                 <button
                                     key={key}
                                     onClick={() => {
-                                        setUserColor(value)
-                                        setOpen(false)
+                                        setUserColor(value);
+                                        setOpen(false);
+                                        localStorage.setItem('user-color', value)
                                     }}
                                     className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white/10 transition"
                                 >
