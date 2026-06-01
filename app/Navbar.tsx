@@ -5,35 +5,33 @@ import ThemeToggle from './components/ThemeToggle'
 import { ColorDropdown } from './components/ColorDropdown'
 import { Logo } from './utils'
 import { useTheme } from 'next-themes'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { BiMenu } from 'react-icons/bi'
+import { useUserColor } from './Hooks/useUserColor'
+import Link from 'next/link'
 
-type NavbarProps = {
-  userColor: string
-  setUserColor: (color: string) => void
-  session: any
-  status: any
-}
+export default function Navbar() {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-export default function Navbar({
-  userColor,
-  setUserColor,
-  session, status
-}: NavbarProps) {
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  const [open, setOpen] = useState(false)
+  const { userColor, setUserColor } = useUserColor();
+  const { data: session } = useSession();
+  const [open, setOpen] = useState(false);
 
+  if (!mounted) return null;
   return (
     <header className="px-4 md:px-6 py-4 border-b sticky top-0 dark:border-white/10 border-black/10 backdrop-blur-xl z-10 flex justify-between items-center">
 
       {/* LOGO */}
       <Logo
         className="w-35 md:w-50"
-        textColor={isDark ? '#fff' : '#000'}
-        titleColor={isDark ? '#dadfe3' : '#b5b5b5'}
+        textColor={resolvedTheme === 'dark' ? '#fff' : '#000'}
+        titleColor={resolvedTheme === 'dark' ? '#dadfe3' : '#b5b5b5'}
       />
 
       {/* DESKTOP MENU */}
@@ -69,6 +67,12 @@ export default function Navbar({
           >
             Sign in
           </button>
+          // <Link
+          //   href="/sign-in"
+          //   className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
+          // >
+          //   Sign in
+          // </Link>
         )}
       </div>
 

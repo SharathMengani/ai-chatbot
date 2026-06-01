@@ -19,7 +19,7 @@ export default function Sidebar({
   userColor
 }: Props) {
   return (
-    <div className='w-70 border-r dark:border-white/10 border-black/10 p-3 md:h-screen h-full items-center justify-between flex flex-col '>
+    <div className='w-70 border-r dark:border-white/10 border-black/10 p-3 md:h-[90vh] h-full items-center justify-between flex flex-col '>
       {/* NEW CHAT */}
 
 

@@ -1,7 +1,8 @@
 import { getServerSession } from 'next-auth'
 
-import { connectDB } from '@/app/lib/mongodb'
-import ChatHistory from '@/app/models/ChatHistory'
+
+import ChatHistory from '@/app/(backend)/models/ChatHistory'
+import { connectDB } from '../../lib/mongodb'
 
 export async function GET() {
   try {

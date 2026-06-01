@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth'
 
-import { connectDB } from '@/app/lib/mongodb'
-import ChatHistory from '@/app/models/ChatHistory'
+import ChatHistory from '@/app/(backend)/models/ChatHistory'
+import { connectDB } from '@/app/(backend)/lib/mongodb'
 
 type Params = {
   params: Promise<{
