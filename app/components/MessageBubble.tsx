@@ -36,12 +36,14 @@ export default function MessageBubble({
             {msg.role !== 'user' ?
                 <Icon className='w-8' /> :
 
-                (session && session.user.image) && (
+                (session && session.user.image) ? (
                     <img
                         src={session.user.image}
                         alt="User"
                         className="w-8 h-8 rounded-full border border-[#333]"
                     />
+                ) : (
+                    <FaUserCircle className='w-8 h-8 dark:text-white' />
                 )
 
             }
