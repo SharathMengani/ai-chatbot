@@ -17,30 +17,54 @@ export async function POST(req: Request) {
       );
     }
 
-    const res = await fetch(
-      `https://api.github.com/repos/${process.env.GITHUB_REPO}/contents/${filePath}`,
+    const repo = process.env.GITHUB_REPO!;
+    const token = process.env.GITHUB_TOKEN!;
+
+    // 1. GET FILE INFO (to get SHA)
+    const fileRes = await fetch(
+      `https://api.github.com/repos/${repo}/contents/${filePath}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github+json",
+        },
+      }
+    );
+
+    if (!fileRes.ok) {
+      const err = await fileRes.json();
+      return NextResponse.json({ error: err }, { status: 404 });
+    }
+
+    const fileData = await fileRes.json();
+
+    // 2. DELETE FILE
+    const deleteRes = await fetch(
+      `https://api.github.com/repos/${repo}/contents/${filePath}`,
       {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+          Authorization: `Bearer ${token}`,
           Accept: "application/vnd.github+json",
         },
         body: JSON.stringify({
           message: "delete profile image",
+          sha: fileData.sha, // ✅ REQUIRED
+          branch: "main",
         }),
       }
     );
 
-    const data = await res.json();
+    const data = await deleteRes.json();
 
-    if (!res.ok) {
+    if (!deleteRes.ok) {
       return NextResponse.json({ error: data }, { status: 500 });
     }
 
-    // remove from DB
+    // 3. UPDATE DB
     await User.findOneAndUpdate(
       { email },
-      { image: null }
+      { image: null, imagePath: null }
     );
 
     return NextResponse.json({ success: true });
