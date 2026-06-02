@@ -11,7 +11,7 @@ export function UserColorProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [userColor, setUserColor] = useState("bg-blue-500");
+  const [userColor, setUserColor] = useState("border-2 border-blue-500");
 
   useEffect(() => {
     const saved = localStorage.getItem("user-color");
