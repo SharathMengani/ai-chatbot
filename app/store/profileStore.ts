@@ -13,37 +13,34 @@ interface ProfileState {
   clearProfile: () => void;
 }
 
-export const useProfileStore =
-  create<ProfileState>((set) => ({
-    user: null,
-    loading: false,
-    error: null,
+export const useProfileStore = create<ProfileState>((set, get) => ({
+  user: null,
+  loading: false,
+  error: null,
 
-    fetchProfile: async () => {
-      try {
-        set({ loading: true });
+  fetchProfile: async () => {
+    try {
+      set({ loading: true, error: null });
 
-        const profile =
-          await profileService.getProfile();
+      const profile = await profileService.getProfile();
 
-        set({
-          user: profile,
-          loading: false,
-        });
-      } catch (error) {
-        set({
-          loading: false,
-          error:
-            error instanceof Error
-              ? error.message
-              : "Something went wrong",
-        });
-      }
-    },
+      set({
+        user: profile,
+        loading: false,
+      });
+    } catch (error) {
+      set({
+        loading: false,
+        error: error instanceof Error ? error.message : "Something went wrong",
+      });
+    }
+  },
 
-    uploadImage: async (file) => {
-      const image =
-        await profileService.uploadImage(file);
+  uploadImage: async (file: File) => {
+    try {
+      set({ loading: true, error: null });
+
+      const image = await profileService.uploadImage(file);
 
       set((state) => ({
         user: state.user
@@ -52,26 +49,47 @@ export const useProfileStore =
               image,
             }
           : null,
+        loading: false,
       }));
-    },
+    } catch (error) {
+      set({
+        loading: false,
+        error: error instanceof Error ? error.message : "Upload failed",
+      });
+    }
+  },
 
-    deleteImage: async () => {
-      await profileService.deleteImage();
+  deleteImage: async () => {
+    try {
+      const user = get().user;
+
+      if (!user?.image) return;
+
+      // ⚠️ you MUST store filePath in DB for this to work properly
+      const filePath = user.image; // recommended field
+
+      await profileService.deleteImage({ email: user.email, filePath });
 
       set((state) => ({
         user: state.user
           ? {
               ...state.user,
-              image: "",
+              image: undefined,
+              imagePath: undefined,
             }
           : null,
       }));
-    },
-
-    clearProfile: () =>
+    } catch (error) {
       set({
-        user: null,
-        error: null,
-        loading: false,
-      }),
-  }));
+        error: error instanceof Error ? error.message : "Delete failed",
+      });
+    }
+  },
+
+  clearProfile: () =>
+    set({
+      user: null,
+      error: null,
+      loading: false,
+    }),
+}));

@@ -1,65 +1,52 @@
-import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { unlink } from "fs/promises";
-import path from "path";
+// app/api/profile/delete-image/route.ts
 
+import { NextResponse } from "next/server";
 import { connectDB } from "@/app/(backend)/lib/mongodb";
 import { User } from "@/app/(backend)/models/User";
-import { authOptions } from "@/app/(backend)/lib/auth";
 
-export async function DELETE() {
+export async function POST(req: Request) {
   try {
-const session = await getServerSession(authOptions);
-
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
     await connectDB();
 
-    const user = await User.findOne({
-      email: session.user.email,
-    });
+    const { email, filePath } = await req.json();
 
-    if (!user) {
+    if (!filePath) {
       return NextResponse.json(
-        { message: "User not found" },
-        { status: 404 }
+        { error: "Missing filePath" },
+        { status: 400 }
       );
     }
 
-    // delete local file if it exists
-    if (
-      user.image &&
-      user.image.startsWith("/uploads/")
-    ) {
-      try {
-        const filepath = path.join(
-          process.cwd(),
-          "public",
-          user.image
-        );
-
-        await unlink(filepath);
-      } catch (error) {
-        console.error("Image file not found", error);
+    const res = await fetch(
+      `https://api.github.com/repos/${process.env.GITHUB_REPO}/contents/${filePath}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+          Accept: "application/vnd.github+json",
+        },
+        body: JSON.stringify({
+          message: "delete profile image",
+        }),
       }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return NextResponse.json({ error: data }, { status: 500 });
     }
 
-    user.image = "";
-    await user.save();
+    // remove from DB
+    await User.findOneAndUpdate(
+      { email },
+      { image: null }
+    );
 
-    return NextResponse.json({
-      success: true,
-    });
-  } catch (error) {
-    console.error(error);
-
+    return NextResponse.json({ success: true });
+  } catch (err) {
     return NextResponse.json(
-      { message: "Something went wrong" },
+      { error: "Delete failed" },
       { status: 500 }
     );
   }

@@ -2,6 +2,7 @@
 
 import { useUserColor } from "@/app/context/UserColorContext";
 import { SignInFormData, signInSchema } from "@/app/schema/signInSchema";
+import { useProfileStore } from "@/app/store/profileStore";
 import { getColor } from "@/app/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
@@ -35,6 +36,7 @@ export default function SignInPage() {
                 toast.error("Login failed:", { description: result.error });
                 return;
             }
+            await useProfileStore.getState().fetchProfile();
             router.push("/chats");
 
         } catch (error) {

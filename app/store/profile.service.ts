@@ -18,7 +18,6 @@ export const profileService = {
 
   async uploadImage(file: File): Promise<string> {
     const formData = new FormData();
-
     formData.append("image", file);
 
     const res = await fetch("/api/profile/upload-image", {
@@ -31,13 +30,16 @@ export const profileService = {
     }
 
     const data = await res.json();
-
     return data.image;
   },
 
-  async deleteImage(): Promise<void> {
+  async deleteImage({ email, filePath }: { email: string; filePath: string }): Promise<void> {
     const res = await fetch("/api/profile/delete-image", {
-      method: "DELETE",
+      method: "POST", // recommended for GitHub delete flow
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, filePath }),
     });
 
     if (!res.ok) {
