@@ -6,6 +6,7 @@ import { ThemeProvider } from 'next-themes'
 import Navbar from './Navbar'
 import { Toaster } from 'sonner'
 import { UserColorProvider } from './context/UserColorContext'
+import AuthGuard from './components/AuthGuard'
 
 export default function Providers({
   children,
@@ -19,9 +20,12 @@ export default function Providers({
         attribute="class" defaultTheme="dark" enableSystem
       >
         <UserColorProvider>
-          <Toaster />
-          <Navbar />
-          {children}
+          
+            <Toaster />
+            <Navbar />
+            <AuthGuard >
+            {children}
+          </AuthGuard>
         </UserColorProvider>
       </ThemeProvider>
     </SessionProvider>
