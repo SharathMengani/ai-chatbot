@@ -6,7 +6,7 @@ import { ColorDropdown } from './components/ColorDropdown'
 import { Logo } from './utils'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
-import { FaTimes } from 'react-icons/fa'
+import { FaTimes, FaUserCircle } from 'react-icons/fa'
 import { BiMenu } from 'react-icons/bi'
 import Link from 'next/link'
 import { useUserColor } from './context/UserColorContext'
@@ -27,12 +27,14 @@ export default function Navbar() {
     <header className="px-4 md:px-6 py-4 border-b sticky top-0 dark:border-white/10 border-black/10 backdrop-blur-xl z-10 flex justify-between items-center">
 
       {/* LOGO */}
-      <Logo
-        className="w-35 md:w-50"
-        textColor={resolvedTheme === 'dark' ? '#fff' : '#000'}
-        titleColor={resolvedTheme === 'dark' ? '#dadfe3' : '#b5b5b5'}
-        eyesColor={'#fff'}
-      />
+      <Link href="/" className='flex items-center gap-2'>
+        <Logo
+          className="w-35 md:w-50"
+          textColor={resolvedTheme === 'dark' ? '#fff' : '#000'}
+          titleColor={resolvedTheme === 'dark' ? '#dadfe3' : '#b5b5b5'}
+          eyesColor={'#fff'}
+        />
+      </Link>
 
       {/* DESKTOP MENU */}
       <div className="hidden md:flex items-center gap-4">
@@ -41,17 +43,21 @@ export default function Navbar() {
 
         {session?.user ? (
           <div className="flex items-center gap-3">
-            {session.user.image && (
-              <img
-                src={session.user.image}
-                alt="User"
-                className="w-8 h-8 rounded-full border border-[#333]"
-              />
-            )}
+            <Link href="/profile" className="flex items-center gap-2">
+              {session.user.image ? (
+                <img
+                  src={session.user.image}
+                  alt="User"
+                  className="w-8 h-8 rounded-full border border-[#333]"
+                />
+              ) : (
+                <FaUserCircle className='w-8 h-8 dark:text-white' />
+              )}
 
-            <span className="text-sm hidden md:block">
-              {session.user.name}
-            </span>
+              <span className="text-sm hidden md:block">
+                {session.user.name}
+              </span>
+            </Link>
 
             <button
               onClick={async () => {
@@ -66,12 +72,6 @@ export default function Navbar() {
             </button>
           </div>
         ) : (
-          // <button
-          //   onClick={() => signIn('google')}
-          //   className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
-          // >
-          //   Sign in
-          // </button>
           <Link
             href="/sign-in"
             className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}

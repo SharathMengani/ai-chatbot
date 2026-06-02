@@ -7,7 +7,7 @@ import { connectDB } from "@/app/(backend)/lib/mongodb";
 import { User } from "@/app/(backend)/models/User";
 import { generateAccessToken, signRefreshToken } from "./jwt";
 
-const handler = NextAuth({
+export const authOptions = {
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -57,7 +57,7 @@ const handler = NextAuth({
   ],
 
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
   },
 
   pages: {
@@ -100,7 +100,8 @@ const handler = NextAuth({
       return session;
     },
   },
-});
+};
 
-// ✅ IMPORTANT: export handler correctly
+const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };
