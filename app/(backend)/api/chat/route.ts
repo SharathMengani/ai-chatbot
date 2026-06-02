@@ -2,8 +2,8 @@
 import OpenAI from 'openai'
 import { getServerSession } from 'next-auth'
 
-import { connectDB } from '@/app/lib/mongodb'
 import ChatHistory from '@/app/(backend)/models/ChatHistory'
+import { connectDB } from '@/app/(backend)/lib/mongodb'
 
 const openai = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,

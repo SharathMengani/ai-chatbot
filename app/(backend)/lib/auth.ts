@@ -2,8 +2,10 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+
 import { connectDB } from "@/app/(backend)/lib/mongodb";
 import { User } from "@/app/(backend)/models/User";
+import { generateAccessToken, signRefreshToken } from "./jwt";
 
 const handler = NextAuth({
   providers: [
@@ -19,22 +21,24 @@ const handler = NextAuth({
       },
 
       async authorize(credentials) {
-        console.log("LOGIN HIT:", credentials);
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
 
         await connectDB();
 
         const user = await User.findOne({
-          email: credentials?.email,
+          email: credentials.email,
         });
 
         if (!user) return null;
 
-        const valid = await bcrypt.compare(
-          credentials!.password as string,
+        const isValid = await bcrypt.compare(
+          credentials.password as string,
           user.password
         );
 
-        if (!valid) return null;
+        if (!isValid) return null;
 
         return {
           id: user._id.toString(),
@@ -48,6 +52,29 @@ const handler = NextAuth({
   session: {
     strategy: "jwt",
   },
+
+  pages: {
+    signIn: "/sign-in",
+  },
+  callbacks: {
+   
+    async jwt({ token, user }: { token: any; user: any }) {
+      if (user) {
+        const accessToken = generateAccessToken(user);
+        const refreshToken = signRefreshToken(user);
+        token.accessToken = accessToken;
+        token.refreshToken = refreshToken;
+      }
+      return token;
+    },
+
+    async session({ session, token }: { session: any; token: any }) {
+      session.accessToken = token.accessToken;
+      session.refreshToken = token.refreshToken;
+      return session;
+    },
+  },
 });
 
+// ✅ IMPORTANT: export handler correctly
 export { handler as GET, handler as POST };

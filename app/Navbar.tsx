@@ -54,25 +54,30 @@ export default function Navbar() {
             </span>
 
             <button
-              onClick={() => signOut()}
+              onClick={async () => {
+                await signOut({
+                  redirect: true,
+                  callbackUrl: "/sign-in",
+                });
+              }}
               className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
             >
               Logout
             </button>
           </div>
         ) : (
-          <button
-            onClick={() => signIn('google')}
-            className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
-          >
-            Sign in
-          </button>
-          // <Link
-          //   href="/sign-in"
+          // <button
+          //   onClick={() => signIn('google')}
           //   className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
           // >
           //   Sign in
-          // </Link>
+          // </button>
+          <Link
+            href="/sign-in"
+            className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
+          >
+            Sign in
+          </Link>
         )}
       </div>
 
@@ -105,8 +110,10 @@ export default function Navbar() {
               </div>
 
               <button
-                onClick={() => {
-                  signOut()
+                onClick={async () => {
+                  await signOut({
+                    callbackUrl: "/",
+                  });
                   setOpen(false)
                 }}
                 className={`text-sm ${userColor} px-4 py-2 rounded-lg`}

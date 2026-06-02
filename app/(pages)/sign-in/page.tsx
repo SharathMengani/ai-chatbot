@@ -7,6 +7,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { FcGoogle } from "react-icons/fc";
 
 export default function SignInPage() {
     const { userColor } = useUserColor();
@@ -36,7 +37,7 @@ export default function SignInPage() {
             console.log("Login successful");
 
             router.push("/chats");
-  
+
         } catch (error) {
             console.error("Login error:", error);
         }
@@ -91,6 +92,26 @@ export default function SignInPage() {
                         {isSubmitting ? 'Signing In...' : ' Sign In'}
                     </button>
                 </form>
+
+                <div className="my-6 flex items-center gap-4">
+                    <div className="h-px flex-1 bg-black/10 dark:bg-white/10" />
+                    <span className="text-sm text-gray-400">Or</span>
+                    <div className="h-px flex-1 bg-black/10 dark:bg-white/10" />
+                </div>
+
+                <button
+                    type="button"
+                    onClick={() =>
+                        signIn("google", {
+                            callbackUrl: "/chats",
+                        })
+                    }
+                    className="w-full rounded-xl border border-black/10 dark:border-white/10 px-4 py-3 flex items-center justify-center gap-3 hover:bg-black/5 dark:hover:bg-white/5 transition"
+                >
+                    <FcGoogle className="text-xl" />
+                    Continue with Google
+                </button>
+
 
                 <p className="mt-6 text-center text-gray-400">
                     Don't have an account?{" "}
