@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpFormData, signUpSchema } from "../../schema/signUpSchema";
 import { useUserColor } from "@/app/Hooks/useUserColor";
+import { toast } from "sonner";
 
 
 export default function SignUpPage() {
@@ -28,15 +29,12 @@ export default function SignUpPage() {
                 body: JSON.stringify(data),
             });
 
-            console.log("Response status:", response);
-
             const result = await response.json();
 
             if (!response.ok) {
-                throw new Error(result.message || "Failed to create user");
+                toast.error("Failed to create user:", { description: result.message });
             }
 
-            console.log("User created successfully:", result.user);
         } catch (error) {
             console.error("Error creating user:", error);
         }

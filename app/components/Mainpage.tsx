@@ -98,7 +98,6 @@ export default function MainPage() {
 
                     const createData =
                         await createRes.json()
-                    console.log('createDatacreateData', createData)
                     const newConversation =
                         createData.conversation
 

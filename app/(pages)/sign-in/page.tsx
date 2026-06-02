@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "sonner";
 
 export default function SignInPage() {
     const { userColor } = useUserColor();
@@ -30,12 +31,9 @@ export default function SignInPage() {
             });
 
             if (result?.error) {
-                console.error("Login failed:", result.error);
+                toast.error("Login failed:", { description: result.error });
                 return;
             }
-
-            console.log("Login successful");
-
             router.push("/chats");
 
         } catch (error) {

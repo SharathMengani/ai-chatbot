@@ -33,6 +33,13 @@ const handler = NextAuth({
 
         if (!user) return null;
 
+        if (user.provider === "google") {
+          throw new Error("Please sign in with Google");
+        }
+        if (!user.password) {
+          return null;
+        }
+
         const isValid = await bcrypt.compare(
           credentials.password as string,
           user.password
