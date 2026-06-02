@@ -8,8 +8,8 @@ import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { BiMenu } from 'react-icons/bi'
-import { useUserColor } from './Hooks/useUserColor'
 import Link from 'next/link'
+import { useUserColor } from './context/UserColorContext'
 
 export default function Navbar() {
   const { resolvedTheme } = useTheme();
@@ -22,7 +22,7 @@ export default function Navbar() {
   const { userColor, setUserColor } = useUserColor();
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
-
+  const color = userColor.match(/border-([a-z]+)-500/)?.[1];
   if (!mounted) return null;
   return (
     <header className="px-4 md:px-6 py-4 border-b sticky top-0 dark:border-white/10 border-black/10 backdrop-blur-xl z-10 flex justify-between items-center">
@@ -32,6 +32,7 @@ export default function Navbar() {
         className="w-35 md:w-50"
         textColor={resolvedTheme === 'dark' ? '#fff' : '#000'}
         titleColor={resolvedTheme === 'dark' ? '#dadfe3' : '#b5b5b5'}
+        eyesColor={color || (resolvedTheme === 'dark' ? '#fff' : '#000')}
       />
 
       {/* DESKTOP MENU */}

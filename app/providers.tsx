@@ -5,6 +5,7 @@ import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'next-themes'
 import Navbar from './Navbar'
 import { Toaster } from 'sonner'
+import { UserColorProvider } from './context/UserColorContext'
 
 export default function Providers({
   children,
@@ -17,9 +18,11 @@ export default function Providers({
       <ThemeProvider
         attribute="class" defaultTheme="dark" enableSystem
       >
-        <Toaster />
-        <Navbar />
-        {children}
+        <UserColorProvider>
+          <Toaster />
+          <Navbar />
+          {children}
+        </UserColorProvider>
       </ThemeProvider>
     </SessionProvider>
   )

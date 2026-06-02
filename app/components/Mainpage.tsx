@@ -13,7 +13,7 @@ import { userColorClasses } from '../utils'
 import ChatInput from './ChatInput'
 import ChatMessages from './ChatMessages'
 import Sidebar from './Sidebar'
-import { useUserColor } from '../Hooks/useUserColor'
+import { useUserColor } from '../context/UserColorContext'
 
 type Message = {
     role: 'user' | 'assistant'

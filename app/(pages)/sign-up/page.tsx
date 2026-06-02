@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpFormData, signUpSchema } from "../../schema/signUpSchema";
-import { useUserColor } from "@/app/Hooks/useUserColor";
 import { toast } from "sonner";
+import { useUserColor } from "@/app/context/UserColorContext";
+import { getColor } from "@/app/utils";
 
 
 export default function SignUpPage() {
@@ -127,7 +128,8 @@ export default function SignUpPage() {
                     Already have an account?{" "}
                     <Link
                         href="/sign-in"
-                        className="text-blue-400 hover:underline"
+                        className="hover:underline"
+                        style={{ color: getColor(userColor) }}
                     >
                         Sign In
                     </Link>

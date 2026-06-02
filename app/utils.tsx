@@ -1,28 +1,21 @@
 export const userColorClasses = {
-  blue: 'border-2 border-blue-400 dark:border-2 border-blue-500 text-slate-900 dark:text-white',
-  green: 'border-2 border-green-400 dark:border-2 border-green-500 text-slate-900 dark:text-white',
-  purple: 'border-2 border-purple-400 dark:border-2 border-purple-500 text-slate-900 dark:text-white',
-
-  red: 'border-2 border-red-400 dark:border-2 border-red-500 text-slate-900 dark:text-white',
-  pink: 'border-2 border-pink-400 dark:border-2 border-pink-500 text-slate-900 dark:text-white',
-  yellow: 'border-2 border-yellow-300 dark:border-2 border-yellow-400 text-slate-900 dark:text-white',
-
-  orange: 'border-2 border-orange-400 dark:border-2 border-orange-500 text-slate-900 dark:text-white',
-
-  indigo: 'border-2 border-indigo-400 dark:border-2 border-indigo-500 text-slate-900 dark:text-white',
-  cyan: 'border-2 border-cyan-400 dark:border-2 border-cyan-500 text-slate-900 dark:text-white',
-  teal: 'border-2 border-teal-400 dark:border-2 border-teal-500 text-slate-900 dark:text-white',
-
-  emerald: 'border-2 border-emerald-400 dark:border-2 border-emerald-500 text-slate-900 dark:text-white',
-  violet: 'border-2 border-violet-400 dark:border-2 border-violet-500 text-slate-900 dark:text-white',
-  fuchsia: 'border-2 border-fuchsia-400 dark:border-2 border-fuchsia-500 text-slate-900 dark:text-white',
-
-  slate: 'border-2 border-slate-300 dark:border-2 border-slate-600 text-slate-900 dark:text-white',
+  blue: 'border-2 border-blue-500',
+  green: 'border-2 border-green-500',
+  purple: 'border-2 border-purple-500',
+  red: 'border-2 border-red-500',
+  pink: 'border-2 border-pink-500',
+  yellow: 'border-2 border-yellow-500',
+  orange: 'border-2 border-orange-500',
+  indigo: 'border-2 border-indigo-500',
+  cyan: 'border-2 border-cyan-500',
+  teal: 'border-2 border-teal-500',
+  violet: 'border-2 border-violet-500',
+  slate: 'border-2 border-slate-500',
 }
 
+export const getColor = (selectedColor: string) => selectedColor.match(/border-([a-z]+)-500/)?.[1];
 
-
-export const Logo = ({ className, textColor, titleColor }: { className: string, textColor: string, titleColor: string }) => {
+export const Logo = ({ className, textColor, titleColor, eyesColor }: { className: string, textColor: string, titleColor: string, eyesColor?: string }) => {
   return (
     <svg className={className} viewBox="0 0 322 81" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M37 7V21" stroke="url(#paint0_linear_288_17)" strokeWidth="3" strokeLinecap="round" />
@@ -30,7 +23,7 @@ export const Logo = ({ className, textColor, titleColor }: { className: string, 
       <path d="M52 19H22C9.84974 19 0 28.8497 0 41V59C0 71.1503 9.84974 81 22 81H52C64.1503 81 74 71.1503 74 59V41C74 28.8497 64.1503 19 52 19Z" fill="url(#paint2_linear_288_17)" />
       <path d="M29 42C29 38.134 25.866 35 22 35C18.134 35 15 38.134 15 42V48C15 51.866 18.134 55 22 55C25.866 55 29 51.866 29 48V42Z" fill="white" />
       <path d="M59 42C59 38.134 55.866 35 52 35C48.134 35 45 38.134 45 42V48C45 51.866 48.134 55 52 55C55.866 55 59 51.866 59 48V42Z" fill="white" />
-      <path d="M20 65C31.3333 73 42.6667 73 54 65" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
+      <path d="M20 65C31.3333 73 42.6667 73 54 65" stroke={eyesColor} strokeWidth="3.5" strokeLinecap="round" />
       <path d="M91.9197 48H84.9993L95.544 17.4545H103.866L114.396 48H107.476L99.8246 24.4347H99.5859L91.9197 48ZM91.4872 35.9936H107.834V41.0348H91.4872V35.9936ZM124.531 17.4545V48H118.073V17.4545H124.531ZM166.516
        28.1484H159.983C159.864 27.3033 159.62 26.5526 159.252 25.8963C158.885 25.2301 158.412 24.6634 157.836 24.196C157.259 23.7287 156.593 23.3707 155.837 23.1222C155.091 22.8736 154.281 22.7493 153.406 22.7493C151.825
         22.7493 150.448 23.142 149.275 23.9276C148.101 24.7031 147.191 25.8366 146.545 27.3281C145.899 28.8097 145.576 30.6094 145.576 32.7273C145.576 34.9048 145.899 36.7344 146.545 38.2159C147.201 39.6974 148.116 40.8161 149.289
@@ -54,15 +47,15 @@ export const Logo = ({ className, textColor, titleColor }: { className: string, 
       <defs>
         <linearGradient id="paint0_linear_288_17" x1="37" y1="7" x2="38.9898" y2="7.14213" gradientUnits="userSpaceOnUse">
           <stop stopColor="#22D3EE" />
-          <stop offset="1" stopColor="#8B5CF6" />
+          <stop offset="1" stopColor={"#8B5CF6"} />
         </linearGradient>
         <linearGradient id="paint1_linear_288_17" x1="32" y1="0" x2="42" y2="10" gradientUnits="userSpaceOnUse">
           <stop stopColor="#22D3EE" />
-          <stop offset="1" stopColor="#8B5CF6" />
+          <stop offset="1" stopColor={"#8B5CF6"} />
         </linearGradient>
         <linearGradient id="paint2_linear_288_17" x1="0" y1="19" x2="61.0421" y2="91.8567" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#38BDF8" />
-          <stop offset="0.5" stopColor="#6366F1" />
+          <stop stopColor={"#38BDF8"} />
+          <stop offset="0.5" stopColor={"#6366F1"} />
           <stop offset="1" stopColor="#A855F7" />
         </linearGradient>
       </defs>

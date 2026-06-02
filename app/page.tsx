@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react"
 import MainPage from "./components/Mainpage"
 import Link from "next/link"
-import { useUserColor } from "./Hooks/useUserColor";
+import { useUserColor } from "./context/UserColorContext";
 
 
 export default function Home() {

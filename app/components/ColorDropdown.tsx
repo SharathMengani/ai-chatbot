@@ -1,6 +1,6 @@
 
 "use client";
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { userColorClasses } from "../utils";
 import { RiArrowDownSLine } from "react-icons/ri";
 
@@ -38,7 +38,7 @@ export function ColorDropdown({
 
             {/* DROPDOWN */}
             {open && (
-                <div className="fixed mt-2 w-fit  border dark:border-white/10 dark:bg-black bg-white border-black/10 rounded-xl shadow-lg overflow-hidden z-50">
+                <div className="absolute right-0 top-10 mt-2 w-80  border dark:border-white/10 dark:bg-black bg-white border-black/10 rounded-xl shadow-lg overflow-hidden z-50">
 
                     <div className="grid md:grid-cols-3 grid-cols-1">
                         {Object.entries(userColorClasses).map(
@@ -53,7 +53,7 @@ export function ColorDropdown({
                                     className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white/10 transition"
                                 >
                                     <span
-                                        className={`w-2 h-2 rounded-full ${value}`}
+                                        className={`w-2 h-2 flex-none rounded-full ${value}`}
                                     />
                                     <span className="capitalize ">
                                         {key}

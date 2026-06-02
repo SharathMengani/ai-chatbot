@@ -1,7 +1,8 @@
 "use client";
 
-import { useUserColor } from "@/app/Hooks/useUserColor";
+import { useUserColor } from "@/app/context/UserColorContext";
 import { SignInFormData, signInSchema } from "@/app/schema/signInSchema";
+import { getColor } from "@/app/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -115,7 +116,8 @@ export default function SignInPage() {
                     Don't have an account?{" "}
                     <Link
                         href="/sign-up"
-                        className="text-blue-400 hover:underline"
+                        className="hover:underline"
+                        style={{ color: getColor(userColor) }}
                     >
                         Sign Up
                     </Link>
