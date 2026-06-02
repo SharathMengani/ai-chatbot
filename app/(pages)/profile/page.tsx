@@ -1,5 +1,6 @@
 "use client";
 
+import { useProfileStore } from "@/app/store/profileStore";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
@@ -13,92 +14,29 @@ interface User {
 }
 
 export default function ProfilePage() {
-    const [user, setUser] = useState<User | null>(null);
     const [uploading, setUploading] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const {
+        user,
+        loading,
+        fetchProfile,
+        uploadImage,
+        deleteImage,
+    } = useProfileStore();
 
     useEffect(() => {
-        const getProfile = async () => {
-            try {
-                const res = await fetch("/api/profile");
-
-                if (!res.ok) {
-                    throw new Error("Failed to load profile");
-                }
-
-                const data = await res.json();
-                setUser(data);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        getProfile();
+        fetchProfile();
     }, []);
 
     const handleUpload = async (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
+        setUploading(true);
         const file = e.target.files?.[0];
 
         if (!file) return;
 
-        try {
-            setUploading(true);
-
-            const formData = new FormData();
-            formData.append("image", file);
-
-            const res = await fetch("/api/profile/upload-image", {
-                method: "POST",
-                body: formData,
-            });
-
-            const data = await res.json();
-
-            if (data.image) {
-                setUser((prev) =>
-                    prev
-                        ? {
-                            ...prev,
-                            image: data.image,
-                        }
-                        : prev
-                );
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setUploading(false);
-        }
-    };
-
-    const handleDeleteImage = async () => {
-        try {
-            const res = await fetch(
-                "/api/profile/delete-image",
-                {
-                    method: "DELETE",
-                }
-            );
-
-            if (!res.ok) {
-                throw new Error("Failed to delete image");
-            }
-
-            setUser((prev) =>
-                prev
-                    ? {
-                        ...prev,
-                        image: "",
-                    }
-                    : prev
-            );
-        } catch (error) {
-            console.error(error);
-        }
+        await uploadImage(file);
+        setUploading(false);
     };
 
     if (loading) {
@@ -166,7 +104,7 @@ export default function ProfilePage() {
 
                         {user.image && (
                             <button
-                                onClick={handleDeleteImage}
+                                onClick={deleteImage}
                                 className="
           absolute
           top-2

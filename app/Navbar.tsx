@@ -10,17 +10,22 @@ import { FaTimes, FaUserCircle } from 'react-icons/fa'
 import { BiMenu } from 'react-icons/bi'
 import Link from 'next/link'
 import { useUserColor } from './context/UserColorContext'
+import { useProfileStore } from './store/profileStore'
 
 export default function Navbar() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-
+  const {
+    user,
+    loading,
+    fetchProfile,
+  } = useProfileStore();
   useEffect(() => {
+    fetchProfile()
     setMounted(true);
   }, []);
 
   const { userColor, setUserColor } = useUserColor();
-  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   if (!mounted) return null;
   return (
@@ -41,21 +46,19 @@ export default function Navbar() {
         <ThemeToggle />
         <ColorDropdown setUserColor={setUserColor} userColor={userColor} />
 
-        {session?.user ? (
+        {user ? (
           <div className="flex items-center gap-3">
             <Link href="/profile" className="flex items-center gap-2">
-              {session.user.image ? (
+              {
                 <img
-                  src={session.user.image}
+                  src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=256`}
                   alt="User"
                   className="w-8 h-8 rounded-full border border-[#333]"
                 />
-              ) : (
-                <FaUserCircle className='w-8 h-8 dark:text-white' />
-              )}
+              }
 
               <span className="text-sm hidden md:block">
-                {session.user.name}
+                {user.name}
               </span>
             </Link>
 
@@ -96,17 +99,17 @@ export default function Navbar() {
           <ThemeToggle />
           <ColorDropdown setUserColor={setUserColor} userColor={userColor} />
 
-          {session?.user ? (
+          {user ? (
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2">
-                {session.user.image && (
+                {user.image && (
                   <img
-                    src={session.user.image}
+                    src={user.image}
                     alt="User"
                     className="w-8 h-8 rounded-full border border-[#333]"
                   />
                 )}
-                <span className="text-sm">{session.user.name}</span>
+                <span className="text-sm">{user.name}</span>
               </div>
 
               <button
