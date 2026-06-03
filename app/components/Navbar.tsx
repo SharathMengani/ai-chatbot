@@ -1,16 +1,16 @@
 'use client'
 
 import { signOut } from 'next-auth/react'
-import ThemeToggle from './components/ThemeToggle'
-import { ColorDropdown } from './components/ColorDropdown'
-import { Logo } from './utils'
+import ThemeToggle from './ThemeToggle'
+import { ColorDropdown } from './ColorDropdown'
+import { Logo } from '../utils'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { BiMenu } from 'react-icons/bi'
 import Link from 'next/link'
-import { useUserColor } from './context/UserColorContext'
-import { useProfileStore } from './store/profileStore'
+import { useUserColor } from '../context/UserColorContext'
+import { useProfileStore } from '../store/profileStore'
 
 export default function Navbar() {
   const { resolvedTheme } = useTheme();

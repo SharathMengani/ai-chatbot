@@ -2,11 +2,6 @@
 'use client'
 
 import { SessionProvider } from 'next-auth/react'
-import { ThemeProvider } from 'next-themes'
-import Navbar from './Navbar'
-import { Toaster } from 'sonner'
-import { UserColorProvider } from './context/UserColorContext'
-import AuthGuard from './components/AuthGuard'
 
 export default function Providers({
   children,
@@ -15,19 +10,8 @@ export default function Providers({
 }) {
 
   return (
-    <SessionProvider>
-      <ThemeProvider
-        attribute="class" defaultTheme="dark" enableSystem
-      >
-        <UserColorProvider>
-          
-            <Toaster />
-            <Navbar />
-            <AuthGuard >
+    <SessionProvider>    
             {children}
-          </AuthGuard>
-        </UserColorProvider>
-      </ThemeProvider>
     </SessionProvider>
   )
 }

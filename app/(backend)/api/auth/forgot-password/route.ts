@@ -70,7 +70,7 @@ export async function POST(req: Request) {
               align="center"
               style="
                 background:#111827;
-                padding:40px 20px;
+                padding:30px 20px;
               "
             >
               <img
