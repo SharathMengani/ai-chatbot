@@ -4,15 +4,30 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/app/(backend)/lib/mongodb";
 import { User } from "@/app/(backend)/models/User";
 
+function extractGitHubPath(imageUrl: string) {
+  // Convert raw URL → repo path
+  if (imageUrl.startsWith("http")) {
+    const url = new URL(imageUrl);
+
+    // /owner/repo/branch/path/to/file
+    const parts = url.pathname.split("/");
+
+    // remove: ["", owner, repo, "main"]
+    return parts.slice(4).join("/");
+  }
+
+  // already a path
+  return imageUrl.replace(/^\/+/, "");
+}
+
 export async function POST(req: Request) {
   try {
     await connectDB();
 
-    const { email, filePath } = await req.json();
-
-    if (!filePath) {
+    const { email, imageUrl } = await req.json();
+    if (!email || !imageUrl) {
       return NextResponse.json(
-        { error: "Missing filePath" },
+        { error: "Missing email or imageUrl" },
         { status: 400 }
       );
     }
@@ -20,7 +35,10 @@ export async function POST(req: Request) {
     const repo = process.env.GITHUB_REPO!;
     const token = process.env.GITHUB_TOKEN!;
 
-    // 1. GET FILE INFO (to get SHA)
+    // ✅ Convert URL → repo path
+    const filePath = extractGitHubPath(imageUrl);
+
+    // 1. Get file SHA
     const fileRes = await fetch(
       `https://api.github.com/repos/${repo}/contents/${filePath}`,
       {
@@ -32,13 +50,16 @@ export async function POST(req: Request) {
     );
 
     if (!fileRes.ok) {
-      const err = await fileRes.json();
-      return NextResponse.json({ error: err }, { status: 404 });
+      const errText = await fileRes.text();
+      return NextResponse.json(
+        { step: "GET_FAILED", error: errText, filePath },
+        { status: 404 }
+      );
     }
 
     const fileData = await fileRes.json();
 
-    // 2. DELETE FILE
+    // 2. Delete file
     const deleteRes = await fetch(
       `https://api.github.com/repos/${repo}/contents/${filePath}`,
       {
@@ -46,28 +67,31 @@ export async function POST(req: Request) {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/vnd.github+json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           message: "delete profile image",
-          sha: fileData.sha, // ✅ REQUIRED
+          sha: fileData.sha,
           branch: "main",
         }),
       }
     );
 
-    const data = await deleteRes.json();
-
     if (!deleteRes.ok) {
-      return NextResponse.json({ error: data }, { status: 500 });
+      const errText = await deleteRes.text();
+      return NextResponse.json(
+        { step: "DELETE_FAILED", error: errText },
+        { status: 500 }
+      );
     }
 
-    // 3. UPDATE DB
+    // 3. Update DB
     await User.findOneAndUpdate(
       { email },
-      { image: null, imagePath: null }
+      { image: null }
     );
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, deletedPath: filePath });
   } catch (err) {
     return NextResponse.json(
       { error: "Delete failed" },

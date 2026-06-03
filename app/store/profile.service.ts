@@ -1,7 +1,8 @@
 export interface UserProfile {
   name: string;
   email: string;
-  image?: string;
+  image: string;       // public URL (display)
+  imagePath: string;    // GitHub repo path (delete)
   provider?: string;
 }
 
@@ -16,7 +17,9 @@ export const profileService = {
     return res.json();
   },
 
-  async uploadImage(file: File): Promise<string> {
+  async uploadImage(
+    file: File
+  ): Promise<{ image: string; imagePath: string }> {
     const formData = new FormData();
     formData.append("image", file);
 
@@ -30,20 +33,33 @@ export const profileService = {
     }
 
     const data = await res.json();
-    return data.image;
+
+    return {
+      image: data.image,
+      imagePath: data.imagePath,
+    };
   },
 
-  async deleteImage({ email, filePath }: { email: string; filePath: string }): Promise<void> {
+  async deleteImage({
+    email,
+    imageUrl,
+  }: {
+    email: string;
+    imageUrl: string;
+  }) {
     const res = await fetch("/api/profile/delete-image", {
-      method: "POST", // recommended for GitHub delete flow
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, filePath }),
+      body: JSON.stringify({
+        email,
+        imageUrl,
+      }),
     });
 
     if (!res.ok) {
-      throw new Error("Failed to delete image");
+      throw new Error("Delete failed");
     }
   },
 };

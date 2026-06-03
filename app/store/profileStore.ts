@@ -9,7 +9,6 @@ interface ProfileState {
   fetchProfile: () => Promise<void>;
   uploadImage: (file: File) => Promise<void>;
   deleteImage: () => Promise<void>;
-
   clearProfile: () => void;
 }
 
@@ -40,15 +39,21 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
     try {
       set({ loading: true, error: null });
 
-      const image = await profileService.uploadImage(file);
+      const { image, imagePath } = await profileService.uploadImage(file);
 
       set((state) => ({
         user: state.user
           ? {
-              ...state.user,
-              image,
-            }
-          : null,
+            ...state.user,
+            image,
+            imagePath,
+          }
+          : {
+            name: "",
+            email: "",
+            image,
+            imagePath,
+          },
         loading: false,
       }));
     } catch (error) {
@@ -65,22 +70,30 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
 
       if (!user?.image) return;
 
-      // ⚠️ you MUST store filePath in DB for this to work properly
-      const filePath = user.image; // recommended field
+      set({ loading: true, error: null });
 
-      await profileService.deleteImage({ email: user.email, filePath });
+      await profileService.deleteImage({
+        email: user.email,
+        imageUrl: user.image,
+      });
 
-      set((state) => ({
-        user: state.user
-          ? {
-              ...state.user,
-              image: undefined,
-              imagePath: undefined,
-            }
-          : null,
-      }));
+      set((state: any) => {
+        if (!state.user) return state;
+
+        const { image, imagePath, ...rest } = state.user;
+
+        return {
+          user: {
+            ...rest,
+            image: undefined,
+            imagePath: undefined,
+          },
+          loading: false,
+        };
+      });
     } catch (error) {
       set({
+        loading: false,
         error: error instanceof Error ? error.message : "Delete failed",
       });
     }

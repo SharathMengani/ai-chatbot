@@ -100,40 +100,40 @@ export default function Navbar() {
           <ColorDropdown setUserColor={setUserColor} userColor={userColor} />
 
           {user ? (
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                {user.image && (
+            <div className="flex items-center gap-3">
+              <Link href="/profile" className="flex items-center gap-2">
+                {
                   <img
-                    src={user.image}
+                    src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=256`}
                     alt="User"
                     className="w-8 h-8 rounded-full border border-[#333]"
                   />
-                )}
-                <span className="text-sm">{user.name}</span>
-              </div>
+                }
+
+                <span className="text-sm hidden md:block">
+                  {user.name}
+                </span>
+              </Link>
 
               <button
                 onClick={async () => {
                   await signOut({
-                    callbackUrl: "/",
+                    redirect: true,
+                    callbackUrl: "/sign-in",
                   });
-                  setOpen(false)
                 }}
-                className={`text-sm ${userColor} px-4 py-2 rounded-lg`}
+                className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
               >
                 Logout
               </button>
             </div>
           ) : (
-            <button
-              onClick={() => {
-                signIn('google')
-                setOpen(false)
-              }}
-              className={`text-sm ${userColor} px-4 py-2 rounded-lg`}
+            <Link
+              href="/sign-in"
+              className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
             >
               Sign in
-            </button>
+            </Link>
           )}
         </div>
       )}
