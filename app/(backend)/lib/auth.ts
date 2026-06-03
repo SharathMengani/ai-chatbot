@@ -26,7 +26,7 @@ export const authOptions = {
         password: {},
       },
 
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -45,6 +45,27 @@ export const authOptions = {
         ) {
           throw new Error("Invalid email or password");
         }
+
+        const forwarded = req?.headers?.["x-forwarded-for"];
+        const ip =
+          (Array.isArray(forwarded) ? forwarded[0] : forwarded?.split(",")[0]) ||
+          "unknown";
+
+        const userAgent = req?.headers?.["user-agent"] || "unknown";
+
+        // ✅ Save login history
+        await User.updateOne(
+          { _id: user._id },
+          {
+            $push: {
+              loginHistory: {
+                ip,
+                userAgent,
+                loggedInAt: new Date(),
+              },
+            },
+          }
+        );
 
         return {
           id: user._id.toString(),
@@ -78,7 +99,28 @@ export const authOptions = {
             image: user.image,
             provider: "google",
             password: null,
+            loginHistory: [
+              {
+                ip: "unknown",
+                userAgent: "google-oauth",
+                loggedInAt: new Date(),
+              },
+            ],
           });
+        } else {
+          // ✅ ALSO LOG LOGIN FOR EXISTING GOOGLE USERS
+          await User.updateOne(
+            { _id: existingUser._id },
+            {
+              $push: {
+                loginHistory: {
+                  ip: "unknown",
+                  userAgent: "google-oauth",
+                  loggedInAt: new Date(),
+                },
+              },
+            }
+          );
         }
       }
 

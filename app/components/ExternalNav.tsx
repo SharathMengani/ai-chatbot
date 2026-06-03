@@ -31,11 +31,11 @@ export const ExternalNav = () => {
 
                 <div className="flex items-center gap-6">
                     <ThemeToggle />
-                    <Link href="/signin">
+                    <Link href="/sign-in">
                         Sign In
                     </Link>
 
-                    <Link href="/signup">
+                    <Link href="/sign-up">
                         Sign Up
                     </Link>
                 </div>

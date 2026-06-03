@@ -36,6 +36,13 @@ const UserSchema = new Schema({
         enum: ["credentials", "google"],
         default: "credentials",
     },
+    loginHistory: [
+        {
+            ip: { type: String },
+            userAgent: { type: String },
+            loggedInAt: { type: Date, default: Date.now },
+        },
+    ],
 });
 
 export const User =
