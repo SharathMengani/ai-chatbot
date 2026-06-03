@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaUserCircle } from 'react-icons/fa'
 import { LuBotMessageSquare } from 'react-icons/lu'
 import { Icon } from '../utils'
 import Image from 'next/image'
+import { useProfileStore } from '../store/profileStore'
 
 type Message = {
     role: 'user' | 'assistant'
@@ -22,10 +23,14 @@ export default function MessageBubble({
     userColor: any
     session: any
 }) {
-    const [open, setOpen] = useState(false)
-
-
-
+    const {
+        user,
+        loading,
+        fetchProfile,
+    } = useProfileStore();
+    useEffect(() => {
+        fetchProfile()
+    }, []);
     return (
         <div
             className={`flex items-center gap-3 ${msg.role === 'user'
@@ -36,16 +41,13 @@ export default function MessageBubble({
             {msg.role !== 'user' ?
                 <Icon className='w-8' /> :
 
-                (session && session.user.image) ? (
+                (user) && (
                     <img
-                        src={session.user.image}
+                        src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=256`}
                         alt="User"
                         className="w-8 h-8 rounded-full border border-[#333]"
                     />
-                ) : (
-                    <FaUserCircle className='w-8 h-8 dark:text-white' />
                 )
-
             }
             <div className='relative max-w-[85%]'>
 

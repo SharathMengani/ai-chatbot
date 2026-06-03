@@ -4,6 +4,7 @@ export interface UserProfile {
   image: string;       // public URL (display)
   imagePath: string;    // GitHub repo path (delete)
   provider?: string;
+  hasPassword?: boolean;
 }
 
 export const profileService = {

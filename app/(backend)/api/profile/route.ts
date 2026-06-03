@@ -20,9 +20,16 @@ export async function GET() {
 
     const user = await User.findOne({
       email: session.user.email,
-    }).select("-password");
+    });
 
-    return NextResponse.json(user);
+    return NextResponse.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      image: user.image,
+      provider: user.provider,
+      hasPassword: !!user.password,
+    });
   } catch (error) {
     console.error(error);
 

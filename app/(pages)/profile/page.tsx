@@ -3,6 +3,7 @@
 import { useProfileStore } from "@/app/store/profileStore";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { CgExternal } from "react-icons/cg";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 
@@ -64,13 +65,15 @@ export default function ProfilePage() {
 
     return (
         <div className="max-w-xl w-full mx-auto px-4 py-24">
-            <Link
-                href="/chats"
-                className="inline-flex items-center gap-1 mb-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition"
-            >
-                <MdOutlineKeyboardArrowLeft className="text-xl" />
-                Back to Chat
-            </Link>
+            <div className="mb-1 flex items-center justify-between gap-2">
+                <Link
+                    href="/chats"
+                    className="inline-flex items-center gap-1 transition"
+                >
+                    <MdOutlineKeyboardArrowLeft className="text-xl" />
+                    Back to Chat
+                </Link>
+            </div>
 
             <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur p-8">
                 {/* Avatar Section */}
@@ -192,6 +195,38 @@ export default function ProfilePage() {
                             {user.provider || "credentials"}
                         </p>
                     </div>
+                    <div className="pt-4 border-t border-black/10 dark:border-white/10">
+                        <p className="text-sm text-gray-500 mb-2">
+                            Security
+                        </p>
+
+                        <Link
+                            href="/change-password"
+                            className="
+            flex
+            items-center
+            justify-between
+            rounded-xl
+            border
+            border-black/10
+            dark:border-white/10
+            px-4
+            py-3
+            transition
+            hover:bg-black/5
+            dark:hover:bg-white/5
+        "
+                        >
+                            <span>
+                                {user.hasPassword
+                                    ? "Change Password"
+                                    : "Set Password"}
+                            </span>
+
+                            <CgExternal className="text-lg opacity-70" />
+                        </Link>
+                    </div>
+
                 </div>
             </div>
         </div>

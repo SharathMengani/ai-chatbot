@@ -39,6 +39,7 @@ export default function Navbar() {
           titleColor={resolvedTheme === 'dark' ? '#dadfe3' : '#b5b5b5'}
           eyesColor={'#fff'}
         />
+        {/* Test */}
       </Link>
 
       {/* DESKTOP MENU */}

@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import { connectDB } from "@/app/(backend)/lib/mongodb";
 import { User } from "@/app/(backend)/models/User";
 import { generateAccessToken, signRefreshToken } from "./jwt";
+import { NextResponse } from "next/server";
 
 export const authOptions = {
   providers: [
@@ -36,28 +37,21 @@ export const authOptions = {
           email: credentials.email,
         });
 
-        if (!user) return null;
-
-        if (user.provider === "google") {
-          throw new Error("Please sign in with Google");
+        if (
+          !user ||
+          user.provider === "google" ||
+          !user.password ||
+          !(await bcrypt.compare(credentials.password, user.password))
+        ) {
+          throw new Error("Invalid email or password");
         }
-        if (!user.password) {
-          return null;
-        }
-
-        const isValid = await bcrypt.compare(
-          credentials.password as string,
-          user.password
-        );
-
-        if (!isValid) return null;
 
         return {
           id: user._id.toString(),
           name: user.name,
           email: user.email,
         };
-      },
+      }
     }),
   ],
 
@@ -83,6 +77,7 @@ export const authOptions = {
             email: user.email,
             image: user.image,
             provider: "google",
+            password: null,
           });
         }
       }
