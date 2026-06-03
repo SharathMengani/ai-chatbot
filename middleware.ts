@@ -3,29 +3,33 @@ import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
-  const pathname = req.nextUrl.pathname;
+  const { pathname } = req.nextUrl;
 
+  // Get auth token
   const token = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  // Get IP
+  // Get IP safely
+  const forwarded = req.headers.get("x-forwarded-for");
+
   const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0] ||
+    forwarded?.split(",")[0]?.trim() ||
     req.headers.get("x-real-ip") ||
     "unknown";
 
-  // Create response first
+  // Create response
   const res = NextResponse.next();
 
-  // Store IP in cookie
-  res.cookies.set("ip", ip, {
+  // Store IP in cookie (used later in NextAuth callbacks)
+  res.cookies.set("login-ip", ip, {
     httpOnly: false,
+    sameSite: "lax",
     path: "/",
   });
 
-  // Redirect logic
+  // Redirect root route
   if (pathname === "/") {
     return NextResponse.redirect(
       new URL(token ? "/chats" : "/sign-in", req.url)
