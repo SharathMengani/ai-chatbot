@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ResetPasswordSchema } from "@/app/schema/ChangePasswordSchema";
 import { useUserColor } from "@/app/context/UserColorContext";
 import { toast } from "sonner";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type PasswordForm = {
     newPassword: string;
@@ -16,7 +16,7 @@ export default function ResetPasswordPage() {
     const params = useParams();
     const [loading, setLoading] = useState(false);
     const { userColor } = useUserColor();
-
+    const router = useRouter();
     const {
         register,
         handleSubmit,
@@ -49,6 +49,7 @@ export default function ResetPasswordPage() {
             }
             toast.success(result.message || "Password updated successfully");
             reset();
+            router.push("/sign-in");
 
         } catch (err: any) {
             toast.error(err.message);

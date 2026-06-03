@@ -39,6 +39,7 @@ export default function forgotPasswordPage() {
       if (!res.ok) {
         throw new Error(result?.error || "Something went wrong");
       }
+      toast.success(result.message || "Password reset link sent to your email");
 
     } catch (error) {
       console.error("Login error:", error);
