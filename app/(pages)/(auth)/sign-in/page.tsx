@@ -84,7 +84,9 @@ export default function SignInPage() {
                                 {errors.password.message}
                             </p>
                         )}
+                         <Link href={'/forgot-password'} className="flex justify-end text-sm mt-1" >Forgot Password</Link>
                     </div>
+                   
 
                     <button
                         type="submit"
