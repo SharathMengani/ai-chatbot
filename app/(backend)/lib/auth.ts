@@ -37,15 +37,19 @@ export const authOptions = {
           email: credentials.email,
         });
 
-        if (
-          !user ||
-          user.provider === "google" ||
-          !user.password ||
-          !(await bcrypt.compare(credentials.password, user.password))
-        ) {
+        if (!user) {
           throw new Error("Invalid email or password");
         }
-        console.log('req?.headers', req?.headers)
+
+        if (!user.password) {
+          throw new Error("Password not set. Please use Google login or set password.");
+        }
+
+        const isValid = await bcrypt.compare(credentials.password, user.password);
+
+        if (!isValid) {
+          throw new Error("Invalid password");
+        }
         const forwarded = req?.headers?.["x-forwarded-for"];
         const ip =
           (Array.isArray(forwarded) ? forwarded[0] : forwarded?.split(",")[0]) ||
