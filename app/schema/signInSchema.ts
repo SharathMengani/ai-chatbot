@@ -16,3 +16,14 @@ export const signInSchema = z
  
 
 export type SignInFormData = z.infer<typeof signInSchema>;
+
+
+export const forgotPasswordSchema = z
+    .object({
+        email: z
+            .string()
+            .email("Enter a valid email address"),
+    })
+ 
+
+export type ForgotFormData = z.infer<typeof forgotPasswordSchema>;

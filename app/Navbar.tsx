@@ -1,12 +1,12 @@
 'use client'
 
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
 import ThemeToggle from './components/ThemeToggle'
 import { ColorDropdown } from './components/ColorDropdown'
 import { Logo } from './utils'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
-import { FaTimes, FaUserCircle } from 'react-icons/fa'
+import { FaTimes } from 'react-icons/fa'
 import { BiMenu } from 'react-icons/bi'
 import Link from 'next/link'
 import { useUserColor } from './context/UserColorContext'
@@ -47,42 +47,7 @@ export default function Navbar() {
         <ThemeToggle />
         <ColorDropdown setUserColor={setUserColor} userColor={userColor} />
 
-        {user ? (
-          <div className="flex items-center gap-3">
-            <Link href="/profile" className="flex items-center gap-2">
-              {
-                <img
-                  src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=256`}
-                  alt="User"
-                  className="w-8 h-8 rounded-full border border-[#333]"
-                />
-              }
-
-              <span className="text-sm hidden md:block">
-                {user.name}
-              </span>
-            </Link>
-
-            <button
-              onClick={async () => {
-                await signOut({
-                  redirect: true,
-                  callbackUrl: "/sign-in",
-                });
-              }}
-              className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
-            >
-              Logout
-            </button>
-          </div>
-        ) : (
-          <Link
-            href="/sign-in"
-            className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
-          >
-            Sign in
-          </Link>
-        )}
+        <UserData user={user} userColor={userColor} />
       </div>
 
       {/* MOBILE MENU BUTTON */}
@@ -100,44 +65,66 @@ export default function Navbar() {
           <ThemeToggle />
           <ColorDropdown setUserColor={setUserColor} userColor={userColor} />
 
-          {user ? (
-            <div className="flex items-center gap-3">
-              <Link href="/profile" className="flex items-center gap-2">
-                {
-                  <img
-                    src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=256`}
-                    alt="User"
-                    className="w-8 h-8 rounded-full border border-[#333]"
-                  />
-                }
-
-                <span className="text-sm hidden md:block">
-                  {user.name}
-                </span>
-              </Link>
-
-              <button
-                onClick={async () => {
-                  await signOut({
-                    redirect: true,
-                    callbackUrl: "/sign-in",
-                  });
-                }}
-                className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
-            <Link
-              href="/sign-in"
-              className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
-            >
-              Sign in
-            </Link>
-          )}
+          <UserData user={user} userColor={userColor} />
         </div>
       )}
     </header>
   )
+}
+
+interface UserDataProps {
+  user: {
+    name?: string;
+    image?: string;
+  } | null;
+  userColor: string;
+}
+
+function UserData({
+  user,
+  userColor,
+}: UserDataProps) {
+  return (
+    <>
+      {user ? (
+        <div className="flex items-center gap-3">
+          <Link href="/profile" className="flex items-center gap-2">
+            <img
+              src={
+                user.image ||
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                  user.name || "User"
+                )}&size=256`
+              }
+              alt="User"
+              className="w-8 h-8 rounded-full border border-[#333]"
+            />
+
+            <span className="hidden text-sm md:block">
+              {user.name}
+            </span>
+          </Link>
+
+          <button
+            onClick={() =>
+              signOut({
+                redirect: true,
+                callbackUrl: "/sign-in",
+              })
+            }
+            className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
+          >
+            Logout
+          </button>
+        </div>
+      ) : (
+        <Link
+          href="/sign-in"
+          className={`text-sm ${userColor} px-4 py-2 rounded-lg transition-all`}
+        >
+          Sign in
+        </Link>
+      )}
+    </>
+  );
 }
