@@ -45,7 +45,7 @@ export const authOptions = {
         ) {
           throw new Error("Invalid email or password");
         }
-
+        console.log('req?.headers', req?.headers)
         const forwarded = req?.headers?.["x-forwarded-for"];
         const ip =
           (Array.isArray(forwarded) ? forwarded[0] : forwarded?.split(",")[0]) ||
