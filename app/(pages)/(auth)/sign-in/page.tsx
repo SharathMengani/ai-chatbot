@@ -9,6 +9,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { BsGithub } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 
@@ -84,9 +85,9 @@ export default function SignInPage() {
                                 {errors.password.message}
                             </p>
                         )}
-                         <Link href={'/forgot-password'} className="flex justify-end text-sm mt-1" >Forgot Password</Link>
+                        <Link href={'/forgot-password'} className="flex justify-end text-sm mt-1" >Forgot Password</Link>
                     </div>
-                   
+
 
                     <button
                         type="submit"
@@ -102,18 +103,30 @@ export default function SignInPage() {
                     <div className="h-px flex-1 bg-black/10 dark:bg-white/10" />
                 </div>
 
-                <button
-                    type="button"
-                    onClick={() =>
-                        signIn("google", {
-                            callbackUrl: "/chats",
-                        })
-                    }
-                    className="w-full rounded-xl border border-black/10 dark:border-white/10 px-4 py-3 flex items-center justify-center gap-3 hover:bg-black/5 dark:hover:bg-white/5 transition"
-                >
-                    <FcGoogle className="text-xl" />
-                    Continue with Google
-                </button>
+                <div className="flex items-center gap-4">
+                    <button
+                        type="button"
+                        onClick={() =>
+                            signIn("google", {
+                                callbackUrl: "/chats",
+                            })
+                        }
+                        className="w-full rounded-xl border border-black/10 dark:border-white/10 px-4 py-3 flex items-center justify-center gap-3 hover:bg-black/5 dark:hover:bg-white/5 transition"
+                    >
+                        <FcGoogle className="text-xl" /> Google
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() =>
+                            signIn("github", {
+                                callbackUrl: "/chats",
+                            })
+                        }
+                        className="w-full rounded-xl border border-black/10 dark:border-white/10 px-4 py-3 flex items-center justify-center gap-3 hover:bg-black/5 dark:hover:bg-white/5 transition"
+                    >
+                        <BsGithub className="text-xl" /> Github
+                    </button>
+                </div>
 
 
                 <p className="mt-6 text-center text-gray-400">

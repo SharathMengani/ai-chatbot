@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import { connectDB } from "@/app/(backend)/lib/mongodb";
 import { User } from "@/app/(backend)/models/User";
 import { generateAccessToken, signRefreshToken } from "./jwt";
-import { NextResponse } from "next/server";
+import Github from "next-auth/providers/github";
 
 export const authOptions = {
   providers: [
@@ -16,6 +16,15 @@ export const authOptions = {
       authorization: {
         params: {
           prompt: "select_account",
+        },
+      },
+    }),
+    Github({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope: "read:user user:email",
         },
       },
     }),
@@ -38,7 +47,7 @@ export const authOptions = {
         });
 
         if (!user) {
-          throw new Error("Invalid email or password");
+          throw new Error("User not found");
         }
 
         if (!user.password) {
@@ -89,7 +98,7 @@ export const authOptions = {
   },
   callbacks: {
     async signIn({ user, account }: { user: any, account: any }) {
-      if (account?.provider === "google") {
+      if (account?.provider === "google" || account?.provider === "github") {
         await connectDB();
 
         const existingUser = await User.findOne({
@@ -101,12 +110,12 @@ export const authOptions = {
             name: user.name,
             email: user.email,
             image: user.image,
-            provider: "google",
+            provider: account.provider,
             password: null,
             loginHistory: [
               {
                 ip: "unknown",
-                userAgent: "google-oauth",
+                userAgent: `${account.provider}-oauth`,
                 loggedInAt: new Date(),
               },
             ],
@@ -119,7 +128,7 @@ export const authOptions = {
               $push: {
                 loginHistory: {
                   ip: "unknown",
-                  userAgent: "google-oauth",
+                  userAgent: `${account.provider}-oauth`,
                   loggedInAt: new Date(),
                 },
               },

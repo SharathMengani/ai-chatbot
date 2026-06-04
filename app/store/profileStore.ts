@@ -5,6 +5,7 @@ interface ProfileState {
   user: UserProfile | null;
   loading: boolean;
   error: string | null;
+  fetched: boolean,
 
   fetchProfile: () => Promise<void>;
   uploadImage: (file: File) => Promise<void>;
@@ -16,8 +17,10 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
   user: null,
   loading: false,
   error: null,
+  fetched: false,
 
   fetchProfile: async () => {
+    if (get().fetched) return; // ✅ prevents multiple calls
     try {
       set({ loading: true, error: null });
 
@@ -26,6 +29,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
       set({
         user: profile,
         loading: false,
+        fetched: true,
       });
     } catch (error) {
       set({

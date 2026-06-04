@@ -18,15 +18,17 @@ export default function ProfilePage() {
     const [uploading, setUploading] = useState(false);
     const {
         user,
-        loading,
+        fetched,
         fetchProfile,
         uploadImage,
-        deleteImage,
+        loading, deleteImage
     } = useProfileStore();
 
     useEffect(() => {
-        fetchProfile();
-    }, []);
+        if (!fetched) {
+            fetchProfile();
+        }
+    }, [fetched]);
 
     const handleUpload = async (
         e: React.ChangeEvent<HTMLInputElement>

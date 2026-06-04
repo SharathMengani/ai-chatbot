@@ -20,12 +20,15 @@ export default function ChangePasswordPage() {
     const router = useRouter();
     const {
         user,
+        fetched,
         fetchProfile,
     } = useProfileStore();
 
     useEffect(() => {
-        fetchProfile();
-    }, []);
+        if (!fetched) {
+            fetchProfile();
+        }
+    }, [fetched]);
     useEffect(() => {
         if (user && !user.hasPassword) {
             router.replace("/set-password");

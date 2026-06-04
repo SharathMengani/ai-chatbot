@@ -25,12 +25,14 @@ export default function MessageBubble({
 }) {
     const {
         user,
-        loading,
+        fetched,
         fetchProfile,
     } = useProfileStore();
     useEffect(() => {
-        fetchProfile()
-    }, []);
+        if (!fetched) {
+            fetchProfile()
+        }
+    }, [fetched]);
     return (
         <div
             className={`flex items-center gap-3 ${msg.role === 'user'
