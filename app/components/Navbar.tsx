@@ -51,7 +51,7 @@ export default function Navbar() {
       </div>
 
       {/* MOBILE MENU BUTTON */}
-      <button
+      <button aria-label='MOBILE MENU BUTTON'
         className="md:hidden"
         onClick={() => setOpen(!open)}
       >
@@ -105,7 +105,7 @@ function UserData({
             </span>
           </Link>
 
-          <button
+          <button aria-label='Logout'
             onClick={() =>
               signOut({
                 redirect: true,

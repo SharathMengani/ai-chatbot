@@ -26,7 +26,7 @@ export default function ChatInput({
               Press Enter to send
             </div>
 
-            <button
+            <button aria-label="Send Message"
               onClick={sendMessage}
               disabled={loading}
               className={`px-5 py-2.5 rounded-xl font-medium transition-all ${

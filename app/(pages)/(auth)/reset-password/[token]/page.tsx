@@ -105,7 +105,7 @@ export default function ResetPasswordPage() {
                         )}
                     </div>
 
-                    <button
+                    <button aria-label="Reset Password"
                         disabled={loading}
                         className={`w-full rounded-xl ${userColor} py-3 font-medium  disabled:opacity-50`}
                     >

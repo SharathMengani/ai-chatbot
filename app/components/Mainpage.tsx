@@ -455,7 +455,7 @@ export default function MainPage() {
     `}
             >
                 {/* CLOSE BUTTON */}
-                <button
+                <button aria-label='Menu buttons'
                     className={`md:hidden absolute -translate-y-1/2 top-24 -right-8.5 text-sm p-2 rounded-r-2xl ${userColor}`}
                     onClick={() => setSidebarOpen(!sidebarOpen)}
                 >

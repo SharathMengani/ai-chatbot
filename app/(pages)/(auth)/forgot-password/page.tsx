@@ -74,7 +74,7 @@ export default function forgotPasswordPage() {
           </div>
 
 
-          <button
+          <button aria-label="Sign In"
             type="submit"
             className={`w-full rounded-xl ${userColor} py-3 font-medium  disabled:opacity-50`}
           >

@@ -25,7 +25,7 @@ export function ColorDropdown({
         <div className="relative text-left text-[16px]">
 
             {/* BUTTON */}
-            <button
+            <button aria-label="Seleced Color"
                 onClick={() => setOpen(!open)}
                 className="bg-white/5 border dark:border-white/10 border-black/10 px-4 py-1 rounded-xl flex items-center gap-2"
             >
@@ -43,7 +43,7 @@ export function ColorDropdown({
                     <div className="grid md:grid-cols-3 grid-cols-1">
                         {Object.entries(userColorClasses).map(
                             ([key, value]) => (
-                                <button
+                                <button aria-label="Selecting Color"
                                     key={key}
                                     onClick={() => {
                                         setUserColor(value);

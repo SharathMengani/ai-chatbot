@@ -89,7 +89,7 @@ export default function SignInPage() {
                     </div>
 
 
-                    <button
+                    <button aria-label="Sign In"
                         type="submit"
                         className={`w-full rounded-xl ${userColor} py-3 font-medium  disabled:opacity-50`}
                     >
@@ -104,7 +104,7 @@ export default function SignInPage() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <button
+                    <button aria-label="Google"
                         type="button"
                         onClick={() =>
                             signIn("google", {
@@ -115,7 +115,7 @@ export default function SignInPage() {
                     >
                         <FcGoogle className="text-xl" /> Google
                     </button>
-                    <button
+                    <button aria-label="Github"
                         type="button"
                         onClick={() =>
                             signIn("github", {

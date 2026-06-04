@@ -17,7 +17,7 @@ export default function ThemeToggle() {
   if (!mounted) return null
 
   return (
-    <button
+    <button aria-label='Theme Switcher'
       onClick={() =>
         setTheme(
           theme === 'dark'

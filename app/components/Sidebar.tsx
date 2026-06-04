@@ -36,7 +36,7 @@ export default function Sidebar({
                   }`}
               >
                 {/* CHAT BUTTON */}
-                <button
+                <button aria-label="CHAT BUTTON"
                   onClick={() =>
                     setActiveConversation(chat?._id)
                   }
@@ -48,7 +48,7 @@ export default function Sidebar({
                 </button>
 
                 {/* DELETE BUTTON */}
-                <button
+                <button aria-label="DELETE BUTTON"
                   onClick={() =>
                     deleteConversation(chat?._id)
                   }
@@ -63,7 +63,7 @@ export default function Sidebar({
             <p className='text-md text-gray-500'>No conversations yet</p>
           </div>}
       </>
-      <button
+      <button aria-label="Create Conversation"
         onClick={createConversation}
         className={`w-full ${userColor} flex items-center gap-2 justify-center rounded-xl py-3 font-semibold mb-4 hover:opacity-90 transition-all`}
       >

@@ -115,7 +115,7 @@ export default function SignUpPage() {
                         )}
                     </div>
 
-                    <button
+                    <button aria-label="Sign up"
                         type="submit"
                         disabled={isSubmitting}
                         className={`w-full rounded-xl ${userColor} py-3 font-medium  disabled:opacity-50`}

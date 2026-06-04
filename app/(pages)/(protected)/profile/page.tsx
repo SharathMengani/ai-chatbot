@@ -108,7 +108,7 @@ export default function ProfilePage() {
                         </label>
 
                         {user.image && (
-                            <button
+                            <button aria-label="Profile Image Delete"
                                 onClick={deleteImage}
                                 className="
           absolute
