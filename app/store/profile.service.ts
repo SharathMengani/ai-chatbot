@@ -1,3 +1,6 @@
+import axios from "axios";
+import api from "../lib/api";
+
 export interface UserProfile {
   name: string;
   email: string;
@@ -9,13 +12,9 @@ export interface UserProfile {
 
 export const profileService = {
   async getProfile(): Promise<UserProfile> {
-    const res = await fetch("/api/profile");
+    const res = await api.get("/profile");
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch profile");
-    }
-
-    return res.json();
+    return res.data;
   },
 
   async uploadImage(
@@ -24,22 +23,14 @@ export const profileService = {
     const formData = new FormData();
     formData.append("image", file);
 
-    const res = await fetch("/api/profile/upload-image", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to upload image");
-    }
-
-    const data = await res.json();
-
+    const res = await api.post("/profile/upload-image", formData);
     return {
-      image: data.image,
-      imagePath: data.imagePath,
+      image: res.data.image,
+      imagePath: res.data.imagePath,
     };
   },
+
+
 
   async deleteImage({
     email,
@@ -47,20 +38,15 @@ export const profileService = {
   }: {
     email: string;
     imageUrl: string;
-  }) {
-    const res = await fetch("/api/profile/delete-image", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+  }): Promise<{ message: string }> {
+    const res = await api.post(
+      "/profile/delete-image",
+      {
         email,
         imageUrl,
-      }),
-    });
+      }
+    );
 
-    if (!res.ok) {
-      throw new Error("Delete failed");
-    }
-  },
+    return res.data;
+  }
 };

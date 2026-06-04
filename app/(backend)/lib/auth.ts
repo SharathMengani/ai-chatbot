@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { getServerSession } from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
@@ -36,6 +36,7 @@ export const authOptions = {
       },
 
       async authorize(credentials, req) {
+ 
         if (!credentials?.email || !credentials?.password) {
           return null;
         }

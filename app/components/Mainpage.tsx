@@ -14,6 +14,8 @@ import ChatInput from './ChatInput'
 import ChatMessages from './ChatMessages'
 import Sidebar from './Sidebar'
 import { useUserColor } from '../context/UserColorContext'
+import axios from 'axios'
+import api from '../lib/api'
 
 type Message = {
     role: 'user' | 'assistant'
@@ -68,7 +70,7 @@ export default function MainPage() {
     useEffect(() => {
         const fetchConversations = async () => {
             try {
-                const res = await fetch('/api/messages')
+                const res = await api.get('/messages')
 
                 // NOT LOGGED IN
                 if (res.status === 401) {
@@ -76,30 +78,16 @@ export default function MainPage() {
                     return
                 }
 
-                if (!res.ok) {
-                    throw new Error(
-                        'Failed to fetch conversations'
-                    )
-                }
-
-                const data = await res.json()
 
                 // NO CONVERSATIONS
                 if (
-                    !data?.conversations ||
-                    data.conversations.length === 0
+                    !res.data?.conversations ||
+                    res.data.conversations.length === 0
                 ) {
-                    const createRes = await fetch(
-                        '/api/conversations',
-                        {
-                            method: 'POST',
-                        }
-                    )
+                    const createRes = await api.post('/conversations')
 
-                    const createData =
-                        await createRes.json()
                     const newConversation =
-                        createData.conversation
+                        createRes.data.conversation
 
                     setConversations([newConversation])
 
@@ -113,10 +101,10 @@ export default function MainPage() {
                 }
 
                 // EXISTING CONVERSATIONS
-                setConversations(data.conversations)
+                setConversations(res.data.conversations)
 
                 const firstConversation =
-                    data.conversations[0]
+                    res.data.conversations[0]
 
                 setActiveConversation(
                     firstConversation._id
@@ -160,18 +148,10 @@ export default function MainPage() {
 
     const createConversation = async () => {
         try {
-            const res = await fetch('/api/conversations', {
-                method: 'POST',
-            })
-
-            const data = await res.json()
-
-            if (!res.ok) {
-                throw new Error(data.error)
-            }
+            const res = await api.post('/conversations')
 
             const newConversation = {
-                ...data.conversation,
+                ...res.data.conversation,
                 title: 'New Chat',
                 messages: [],
             }
@@ -193,199 +173,142 @@ export default function MainPage() {
     }
 
     const sendMessage = async () => {
-        if (!input.trim() || loading) return
+        if (!input.trim() || loading) return;
 
-        const currentInput = input.trim()
+        const currentInput = input.trim();
+        let currentConversationId = activeConversation;
 
-        let currentConversationId =
-            activeConversation
-
-        setLoading(true)
+        setLoading(true);
 
         try {
-            // ✅ AUTO CREATE CONVERSATION
+            // Create conversation if needed
             if (!currentConversationId) {
-                const createRes = await fetch(
-                    '/api/conversations',
-                    {
-                        method: 'POST',
-                    }
-                )
-
-                const createData =
-                    await createRes.json()
-
-                if (!createRes.ok) {
-                    throw new Error(
-                        createData.error ||
-                        'Failed to create chat'
-                    )
-                }
+                const { data } = await api.post(
+                    "/conversations"
+                );
 
                 const newConversation = {
-                    ...createData.conversation,
-                    title:
-                        currentInput.slice(0, 40),
+                    ...data.conversation,
+                    title: currentInput.slice(0, 40),
                     messages: [],
-                }
+                };
 
-                // UPDATE SIDEBAR
                 setConversations((prev) => [
                     newConversation,
                     ...prev,
-                ])
+                ]);
 
-                // SET ACTIVE CHAT
                 setActiveConversation(
                     newConversation._id
-                )
+                );
 
                 currentConversationId =
-                    newConversation._id
+                    newConversation._id;
             }
 
             const userMessage: Message = {
-                role: 'user',
-                type: 'text',
+                role: "user",
+                type: "text",
                 content: currentInput,
-            }
+            };
 
-            // ADD USER MESSAGE
-            setMessages((prevMessages) => [
-                ...prevMessages,
+            setMessages((prev) => [
+                ...prev,
                 userMessage,
-            ])
+            ]);
 
-            // CLEAR INPUT
-            setInput('')
+            setInput("");
 
-            // SEND MESSAGE
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type':
-                        'application/json',
-                },
-                body: JSON.stringify({
+            const { data } = await api.post(
+                "/chat",
+                {
                     message: currentInput,
                     conversationId:
                         currentConversationId,
-                }),
-            })
+                }
+            );
 
-            // AUTH ERROR
-            if (response.status === 401) {
-                setMessages([defaultMessage])
-                return
-            }
-
-            const data = await response.json()
-
-            if (!response.ok) {
-                throw new Error(
-                    data.error || 'Request failed'
-                )
-            }
-
-            // ASSISTANT MESSAGE
             const assistantMessage: Message =
                 data.image
                     ? {
-                        role: 'assistant',
-                        type: 'image',
+                        role: "assistant",
+                        type: "image",
                         content: data.image,
                     }
                     : {
-                        role: 'assistant',
-                        type: 'text',
+                        role: "assistant",
+                        type: "text",
                         content:
                             data.reply ||
-                            'No response generated',
-                    }
+                            "No response generated",
+                    };
 
-            // ADD AI MESSAGE
-            setMessages((prevMessages) => [
-                ...prevMessages,
+            setMessages((prev) => [
+                ...prev,
                 assistantMessage,
-            ])
+            ]);
 
-            // UPDATE CONVERSATIONS
             setConversations((prev) =>
                 prev.map((conversation) => {
                     if (
                         conversation._id !==
                         currentConversationId
                     ) {
-                        return conversation
+                        return conversation;
                     }
 
                     return {
                         ...conversation,
-
                         title:
                             conversation.title ===
-                                'New Chat'
-                                ? currentInput.slice(
-                                    0,
-                                    40
-                                )
+                                "New Chat"
+                                ? currentInput.slice(0, 40)
                                 : conversation.title,
-
                         messages: [
                             ...conversation.messages,
                             userMessage,
                             assistantMessage,
                         ],
-                    }
+                    };
                 })
-            )
-        } catch (error) {
+            );
+        } catch (error: any) {
             const errorMessage: Message = {
-                role: 'assistant',
-                type: 'error',
+                role: "assistant",
+                type: "error",
                 content:
-                    error instanceof Error
-                        ? error.message
-                        : 'Something went wrong',
-            }
+                    error.response?.data?.error ||
+                    error.message ||
+                    "Something went wrong",
+            };
 
-            setMessages((prevMessages) => [
-                ...prevMessages,
+            setMessages((prev) => [
+                ...prev,
                 errorMessage,
-            ])
+            ]);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
     const deleteConversation = async (
         conversationId: string
     ) => {
         try {
-            const res = await fetch(
-                `/api/conversations/${conversationId}`,
-                {
-                    method: 'DELETE',
-                }
-            )
-
-            if (!res.ok) {
-                throw new Error(
-                    'Failed to delete conversation'
-                )
-            }
+            await api.delete(
+                `/conversations/${conversationId}`
+            );
 
             const updatedConversations =
                 conversations.filter(
                     (conversation) =>
                         conversation._id !==
                         conversationId
-                )
+                );
 
             setConversations(
                 updatedConversations
-            )
+            );
 
-            // SWITCH TO FIRST CHAT
             if (
                 activeConversation ===
                 conversationId
@@ -394,27 +317,29 @@ export default function MainPage() {
                     updatedConversations.length > 0
                 ) {
                     const first =
-                        updatedConversations[0]
+                        updatedConversations[0];
 
-                    setActiveConversation(first._id)
+                    setActiveConversation(first._id);
 
                     setMessages(
-                        first.messages.length > 0
+                        first.messages.length
                             ? first.messages
                             : [defaultMessage]
-                    )
+                    );
                 } else {
-                    setActiveConversation('')
-
+                    setActiveConversation("");
                     setMessages([
                         defaultMessage,
-                    ])
+                    ]);
                 }
             }
         } catch (error) {
-            console.error(error)
+            console.error(
+                "Delete conversation failed:",
+                error
+            );
         }
-    }
+    };
 
     // ENTER KEY
     const handleKeyDown = (

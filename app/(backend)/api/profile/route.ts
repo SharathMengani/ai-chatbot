@@ -4,11 +4,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/(backend)/lib/auth";
 import { connectDB } from "@/app/(backend)/lib/mongodb";
 import { User } from "@/app/(backend)/models/User";
+import { verifyToken } from "../../lib/jwt";
 
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-
     if (!session?.user?.email) {
       return NextResponse.json(
         { message: "Unauthorized" },

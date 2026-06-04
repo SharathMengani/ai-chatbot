@@ -58,13 +58,6 @@ export default function ProfilePage() {
         );
     }
 
-    const initials = user.name
-        .split(" ")
-        .map((word) => word[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2);
-
     return (
         <div className="max-w-xl w-full mx-auto px-4 py-24">
             <div className="mb-1 flex items-center justify-between gap-2">

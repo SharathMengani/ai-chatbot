@@ -8,6 +8,8 @@ import { useUserColor } from "@/app/context/UserColorContext";
 import { useProfileStore } from "@/app/store/profileStore";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import api from "@/app/lib/api";
 
 type PasswordForm = {
     currentPassword?: string;
@@ -58,21 +60,14 @@ export default function ChangePasswordPage() {
                     currentPassword: data.currentPassword || '',
                 }),
             };
-            const res = await fetch("/api/auth/change-password", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
+            const res = await api.post(
+                "/auth/change-password",
+                payload
+            );
 
-            const result = await res.json();
-
-            if (!res.ok) {
-                throw new Error(result?.error || "Something went wrong");
-            }
-            await fetchProfile();
-            toast.success(result.message || "Password updated successfully");
+            toast.success(
+                res.data.message || "Password updated successfully"
+            );
             reset();
 
         } catch (err: any) {
